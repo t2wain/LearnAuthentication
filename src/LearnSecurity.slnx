@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Security.ConsoleApp/Security.ConsoleApp.csproj" Id="cac81109-10be-4bc9-8535-6503cf1ab22a" />
+  <Project Path="Security.Identity/Security.Identity.csproj" Id="990feba2-7050-4d89-aff7-8c28133060bc" />
+</Solution>
