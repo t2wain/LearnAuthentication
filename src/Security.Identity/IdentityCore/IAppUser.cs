@@ -10,4 +10,3 @@
         public string? SecurityStamp { get; set; } = default!;
     }
 }
-`

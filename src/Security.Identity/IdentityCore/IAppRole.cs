@@ -1,6 +1,10 @@
 ﻿namespace Security.Identity.IdentityCore
 {
-    public interface IAppRole { }
+    public interface IAppRole 
+    {
+        string ID { get; set; }
+        string Name { get; set; }
+    }
 
     public class AppRole : IAppRole
     {

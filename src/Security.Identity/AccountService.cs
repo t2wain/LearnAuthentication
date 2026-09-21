@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Security.Identity.IdentityCore;
 
 namespace Security.Identity
@@ -18,8 +19,9 @@ namespace Security.Identity
 
         public async Task SignIn(string userName)
         {
-            IAppUser user = await _userManager.FindByNameAsync(userName);
-            await _signInManager.SignInAsync(user, true);
+            IAppUser? user = await _userManager.FindByNameAsync(userName);
+            if (user != null)
+                await _signInManager.SignInAsync(user, true);
         }
 
         public async Task SignOut()

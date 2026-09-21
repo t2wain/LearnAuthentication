@@ -34,15 +34,11 @@ namespace Security.Identity.IdentityCore
             throw new NotImplementedException();
         }
 
-        public Task<string> GetRoleIdAsync(IAppRole role, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<string> GetRoleIdAsync(IAppRole role, CancellationToken cancellationToken) => 
+            Task.FromResult(role.ID);
 
         public Task<string?> GetRoleNameAsync(IAppRole role, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+            => Task.FromResult((string?)role.Name);
 
         public Task SetNormalizedRoleNameAsync(IAppRole role, string? normalizedName, CancellationToken cancellationToken)
         {

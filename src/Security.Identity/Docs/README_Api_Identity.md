@@ -240,7 +240,7 @@ Services.ConfigureApplicationCookie(options =>
 	- **SignInAsync()**
 		- TUser user, 
 		- bool isPersistent, 
-		- [string authenticationMethod = null]
+		- [string **authenticationMethod** = null]
 	- **SignInAsync()**
 		- TUser user, 
 		- **AuthenticationProperties** authenticationProperties, 

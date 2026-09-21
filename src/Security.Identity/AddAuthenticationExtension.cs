@@ -15,12 +15,17 @@ namespace Security.Identity
             services.AddScoped<UserStore>();
             services.AddScoped<IUserStore<IAppUser>, UserStore>();
 
+            services.AddScoped<RoleStore>();
+            services.AddScoped<IRoleStore<IAppRole>, RoleStore>();
+
             // Identity services
             IdentityBuilder identityBuilder = services
                 //.AddIdentityCore<IAppUser>()
                 .AddIdentityCore<IAppUser>((IdentityOptions setupOption) => {  })
                 .AddSignInManager()
-                .AddUserStore<UserStore>();
+                .AddRoleManager<IAppRole>()
+                .AddUserStore<UserStore>()
+                .AddRoleStore<RoleStore>();
 
             // Cookie authentication
             AuthenticationBuilder authBuilder = services

@@ -19,17 +19,17 @@ namespace Security.Identity.IdentityCore
             throw new NotImplementedException();
         }
 
-        public Task<IAppUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public Task<IAppUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IAppUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public Task<IAppUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<string> GetNormalizedUserNameAsync(IAppUser user, CancellationToken cancellationToken)
+        public Task<string?> GetNormalizedUserNameAsync(IAppUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -39,17 +39,17 @@ namespace Security.Identity.IdentityCore
             throw new NotImplementedException();
         }
 
-        public Task<string> GetUserNameAsync(IAppUser user, CancellationToken cancellationToken)
+        public Task<string?> GetUserNameAsync(IAppUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetNormalizedUserNameAsync(IAppUser user, string normalizedName, CancellationToken cancellationToken)
+        public Task SetNormalizedUserNameAsync(IAppUser user, string? normalizedName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetUserNameAsync(IAppUser user, string userName, CancellationToken cancellationToken)
+        public Task SetUserNameAsync(IAppUser user, string? userName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

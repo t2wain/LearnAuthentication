@@ -15,11 +15,11 @@
 - AllowAnonymousAttribute : IAllowAnonymous
 - **AuthorizationBuilder**
 	- AddDefaultPolicy(string name, AuthorizationPolicy policy)
-	- AddDefaultPolicy(string name, Action\<AuthorizationPolicyBuilder> configurePolicy)
+	- **AddDefaultPolicy**(string name, Action\<AuthorizationPolicyBuilder> configurePolicy)
 	- AddFallbackPolicy(string name, AuthorizationPolicy policy)
-	- AddFallbackPolicy(string name, Action\<AuthorizationPolicyBuilder> configurePolicy)
+	- **AddFallbackPolicy**(string name, Action\<AuthorizationPolicyBuilder> configurePolicy)
 	- AddPolicy(string name, AuthorizationPolicy policy)
-	- AddPolicy(string name, Action\<AuthorizationPolicyBuilder> configurePolicy
+	- **AddPolicy**(string name, Action\<**AuthorizationPolicyBuilder**> configurePolicy
 	- SetDefaultPolicy(AuthorizationPolicy policy)
 	- SetFallbackPolicy(AuthorizationPolicy policy)
 	- SetInvokeHandlersAfterFailure(bool invoke)
@@ -48,10 +48,10 @@
 	- FailureReasons : IEnumerable\<AuthorizationFailureReason>
 	- HasFailed
 	- HasSucceeded
-	- PendingRequirements : IEnumerable\<IAuthorizationRequirement>
-	- Requirements : IEnumerable\<IAuthorizationRequirement>
-	- Resource : object
-	- User : ClaimsPrincipal
+	- **PendingRequirements** : IEnumerable\<IAuthorizationRequirement>
+	- **Requirements** : IEnumerable\<IAuthorizationRequirement>
+	- **Resource** : object
+	- **User** : ClaimsPrincipal
 - **AuthorizationOptions**
 	- AddPolicy(string name, AuthorizationPolicy policy)
 	- **AddPolicy**(string name, Action\<**AuthorizationPolicyBuilder**> configurePolicy)
@@ -61,58 +61,58 @@
 	- InvokeHandlersAfterFailure : bool
 - **AuthorizationPolicy**
 	- AuthorizationPolicy(...)
-		- IEnumerable\<IAuthorizationRequirement> requirements, 
-		- IEnumerable\<string> authenticationSchemes
-	- **Combine**(params AuthorizationPolicy[] policies) : AuthorizationPolicy
-	- **Combine**(IEnumerable\<AuthorizationPolicy> policies) : AuthorizationPolicy
-	- CombineAsync(...)
-		- IAuthorizationPolicyProvider policyProvider, 
-		- IEnumerable\<IAuthorizeData> authorizeData
-	- CombineAsync(...)
+		- IEnumerable\<**IAuthorizationRequirement**> requirements, 
+		- IEnumerable\<string> **authenticationSchemes**
+	- **Combine**(params AuthorizationPolicy[] **policies**) : AuthorizationPolicy (static)
+	- **Combine**(IEnumerable\<AuthorizationPolicy> policies) : AuthorizationPolicy (static)
+	- CombineAsync(...) (static)
+		- **IAuthorizationPolicyProvider** policyProvider, 
+		- IEnumerable\<**IAuthorizeData**> authorizeData
+	- CombineAsync(...) (static)
 		- IAuthorizationPolicyProvider policyProvider, 
 		- IEnumerable\<IAuthorizeData> authorizeData, 
 		- IEnumerable\<AuthorizationPolicy> policies
 	- AuthenticationSchemes : IReadOnlyList\<string> 
 	- Requirements : IReadOnlyList\<IAuthorizationRequirement> 
 - **AuthorizationPolicyBuilder**
-	- AddAuthenticationSchemes(params string[] schemes)
-	- AddRequirements(params IAuthorizationRequirement[] requirements)
-	- AuthorizationPolicyBuilder(AuthorizationPolicy policy)
-	- AuthorizationPolicyBuilder(params string[] authenticationSchemes)
+	- **AddAuthenticationSchemes**(params string[] schemes)
+	- **AddRequirements**(params IAuthorizationRequirement[] requirements)
+	- **AuthorizationPolicyBuilder(AuthorizationPolicy policy)**
+	- **AuthorizationPolicyBuilder(params string[] authenticationSchemes)**
 	- **Build()** : AuthorizationPolicy
 	- Combine(AuthorizationPolicy policy)
 	- RequireAssertion(Func<**AuthorizationHandlerContext**, bool> handler)
 	- RequireAssertion(Func<AuthorizationHandlerContext, Task\<bool>> handler)
-	- RequireAuthenticatedUser()
-	- RequireClaim(string claimType)
+	- **RequireAuthenticatedUser**()
+	- **RequireClaim**(string claimType)
 	- RequireClaim(string claimType, params string[] allowedValues)
 	- RequireClaim(string claimType, IEnumerable\<string> allowedValues)
-	- RequireRole(params string[] roles)
+	- **RequireRole**(params string[] roles)
 	- RequireRole(IEnumerable\<string> roles)
-	- RequireUserName(string userName)
-	- AuthenticationSchemes : IList\<string>
-	- Requirements : IList\<IAuthorizationRequirement>
+	- **RequireUserName**(string userName)
+	- **AuthenticationSchemes** : IList\<string>
+	- **Requirements** : IList\<IAuthorizationRequirement>
 - AuthorizationResult
 	- Failed()
 	- Failed(AuthorizationFailure failure)
 	- Success()
 	- Failure : AuthorizationFailure
 	- Succeeded : bool
-- AuthorizationServiceExtensions (this IAuthorizationService)
+- **AuthorizationServiceExtensions** (this **IAuthorizationService**)
 	- AuthorizeAsync(...) : Task\<AuthorizationResult>
 		- ClaimsPrincipal user
 		- AuthorizationPolicy policy
 	- AuthorizeAsync(...) : Task\<AuthorizationResult>
 		- ClaimsPrincipal user
-		- object resource
-		- AuthorizationPolicy policy
+		- object **resource**
+		- **AuthorizationPolicy** policy
 	- AuthorizeAsync(...) : Task\<AuthorizationResult>
 		- ClaimsPrincipal user
 		- object resource
-		- IAuthorizationRequirement requirement
+		- **IAuthorizationRequirement** requirement
 	- AuthorizeAsync(...) : Task\<AuthorizationResult>
 		- ClaimsPrincipal user
-		- string policyName 
+		- string **policyName** 
 - **AuthorizeAttribute** : IAuthorizeData
 	- AuthorizeAttribute(string **policy**)
 	- **AuthenticationSchemes**
@@ -130,57 +130,59 @@
 	- GetHandlersAsync(...) : Task<IEnumerable\<IAuthorizationHandler>> 
 		- AuthorizationHandlerContext context
 - DefaultAuthorizationPolicyProvider : IAuthorizationPolicyProvider
-	- DefaultAuthorizationPolicyProvider(IOptions\<AuthorizationOptions> options)
+	- DefaultAuthorizationPolicyProvider(**IOptions\<AuthorizationOptions>** options)
 	- GetDefaultPolicyAsync() : Task\<AuthorizationPolicy> 
 	- GetFallbackPolicyAsync() : Task\<AuthorizationPolicy> 
 	- GetPolicyAsync(string policyName) : Task\<AuthorizationPolicy> 
 	- AllowsCachingPolicies : bool
-- **DefaultAuthorizationService** : IAuthorizationService
+- **DefaultAuthorizationService** : **IAuthorizationService**
 	- AuthorizeAsync(...) : Task\<**AuthorizationResult**>
 		- ClaimsPrincipal user
-		- object resource
-		- string policyName
+		- object **resource**
+		- string **policyName**
 	- AuthorizeAsync(...) : Task\<AuthorizationResult>
 		- ClaimsPrincipal user, 
-		- object resource, 
-		- IEnumerable\<IAuthorizationRequirement> requirements
+		- object **resource**, 
+		- **IEnumerable\<IAuthorizationRequirement>** requirements
 	- DefaultAuthorizationService(...)
-		- IAuthorizationPolicyProvider policyProvider, 
-		- IAuthorizationHandlerProvider handlers, 
-		- ILogger\<DefaultAuthorizationService> logger, 
-		- IAuthorizationHandlerContextFactory contextFactory, 
-		- IAuthorizationEvaluator evaluator, 
-		- IOptions\<AuthorizationOptions> options
+		- **IAuthorizationPolicyProvider** policyProvider, 
+		- **IAuthorizationHandlerProvider** handlers, 
+		- **ILogger\<DefaultAuthorizationService>** logger, 
+		- **IAuthorizationHandlerContextFactory** contextFactory, 
+		- **IAuthorizationEvaluator** evaluator, 
+		- **IOptions\<AuthorizationOptions>** options
 
 ## Microsoft.AspNetCore.Authorization.Infrastructure
 
 - AssertionRequirement 
 	- : IAuthorizationHandler, IAuthorizationRequirement
-	- AssertionRequirement(Func<AuthorizationHandlerContext, bool> handler)
-	- AssertionRequirement(Func<AuthorizationHandlerContext, Task\<bool>> handler)
+	- **AssertionRequirement(Func<AuthorizationHandlerContext, bool> handler)**
+	- **AssertionRequirement(Func<AuthorizationHandlerContext, Task\<bool>> handler)**
 	- HandleAsync(AuthorizationHandlerContext context) : Task
 	- Handler : Func<AuthorizationHandlerContext, Task\<bool>>
 - ClaimsAuthorizationRequirement 
 	- : AuthorizationHandler\<ClaimsAuthorizationRequirement>
 	- : IAuthorizationRequirement
-	- ClaimsAuthorizationRequirement(string claimType, IEnumerable\<string> allowedValues)
+	- **ClaimsAuthorizationRequirement(...)**
+		- string claimType, 
+		- IEnumerable\<string> allowedValues
 	- AllowedValues : IEnumerable\<string>
 	- ClaimType : string
 - DenyAnonymousAuthorizationRequirement 
 	- : AuthorizationHandler\<ClaimsAuthorizationRequirement>
 	- : IAuthorizationRequirement
-	- DenyAnonymousAuthorizationRequirement()
+	- **DenyAnonymousAuthorizationRequirement()**
 - NameAuthorizationRequirement 
 	- : AuthorizationHandler\<ClaimsAuthorizationRequirement>
 	- : IAuthorizationRequirement
-	- NameAuthorizationRequirement(string requiredName)
+	- **NameAuthorizationRequirement(string requiredName)**
 	- RequiredName : string
 - OperationAuthorizationRequirement
 	- : IAuthorizationRequirement
-	- OperationAuthorizationRequirement()
-	- Name : string
+	- **OperationAuthorizationRequirement()**
+	- **Name** : string
 - RolesAuthorizationRequirement 
 	- : AuthorizationHandler\<ClaimsAuthorizationRequirement>
 	- : IAuthorizationRequirement
-	- RolesAuthorizationRequirement(IEnumerable\<string> allowedRoles)
+	- **RolesAuthorizationRequirement(IEnumerable\<string> allowedRoles)**
 	- AllowedRoles : IEnumerable\<string>
