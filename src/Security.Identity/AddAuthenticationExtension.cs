@@ -21,7 +21,7 @@ namespace Security.Identity
             // Identity services
             IdentityBuilder identityBuilder = services
                 //.AddIdentityCore<IAppUser>()
-                .AddIdentityCore<IAppUser>((IdentityOptions setupOption) => {  })
+                .AddIdentity<IAppUser, IAppRole>((IdentityOptions setupOption) => {  })
                 .AddSignInManager()
                 .AddRoleManager<IAppRole>()
                 .AddUserStore<UserStore>()
