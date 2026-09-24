@@ -16,7 +16,7 @@ namespace Security.Identity.IdentityCore
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+
         }
 
         public Task<IAppUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)

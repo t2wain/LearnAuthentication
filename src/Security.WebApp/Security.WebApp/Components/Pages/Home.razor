@@ -1,0 +1,20 @@
+﻿@page "/"
+@using Security.Identity.Example
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+@code {
+
+    [Inject]
+    public ExploreAuthentication Ex1 { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await Ex1.Run();
+    }
+}

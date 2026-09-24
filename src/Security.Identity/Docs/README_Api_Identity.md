@@ -222,21 +222,191 @@ IdentityBuilder identityBuilder = services
 - **UserClaimsPrincipalFactory\<TUser>**
 - UserLoginInfo
 - **UserManager\<TUser>** : IDisposable
-	- GetClaimsAsync(TUser user)
-	- GetRolesAsync(TUser user)
-	- GetSecurityStampAsync(TUser user)
-	- GetUserAsync(ClaimsPrincipal principal)
-	- GetUserId(ClaimsPrincipal principal)
-	- GetUserIdAsync(TUser user)
-	- GetUserName(ClaimsPrincipal principal)
-	- GetUserNameAsync(TUser user)
-	- GetUsersInRoleAsync(string roleName)
-	- IsInRoleAsync(TUser user, string role)
-	- NormalizeEmail(string email)
-	- NormalizeName(string name)
+	- AccessFailedAsync(TUser user) : Task\<IdentityResult>
+	- AddClaimAsync(TUser user, Claim claim) : Task\<IdentityResult>
+	- AddClaimsAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- IEnumerable\<Claim> claims
+	- AddLoginAsync(TUser user, UserLoginInfo login) : Task\<IdentityResult>
+	- AddOrUpdatePasskeyAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- UserPasskeyInfo passkey
+	- AddPasswordAsync(TUser user, string password) : Task\<IdentityResult>
+	- AddToRoleAsync(TUser user, string role) : Task\<IdentityResult>
+	- AddToRolesAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- IEnumerable\<string> roles
+	- ChangeEmailAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string newEmail, 
+		- string token
+	- ChangePasswordAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string currentPassword, 
+		- string newPassword
+	- ChangePhoneNumberAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string phoneNumber, 
+		- string token
+	- CheckPasswordAsync(TUser user, string password) : Task\<bool>
+	- ConfirmEmailAsync(TUser user, string token) : Task\<IdentityResult>
+	- CountRecoveryCodesAsync(TUser user) : Task\<int>
+	- CreateAsync(TUser user) : Task\<IdentityResult>
+	- CreateAsync(TUser user, string password) : Task\<IdentityResult>
+	- CreateSecurityTokenAsync(TUser user) : Task\<byte[]>
+	- CreateTwoFactorRecoveryCode() : string
+	- DeleteAsync(TUser user) : Task\<byte[]>
+	- Dispose()
+	- FindByEmailAsync(string email) : Task\<TUser>
+	- FindByIdAsync(string userId) : Task\<TUser>
+	- FindByLoginAsync(string loginProvider, string providerKey) : Task\<TUser>
+	- FindByNameAsync(string userName) : Task\<TUser>
+	- FindByPasskeyIdAsync(byte[] credentialId) : Task\<TUser>
+	- GenerateChangeEmailTokenAsync(TUser user, string newEmail) : Task\<string>
+	- GenerateConcurrencyStampAsync(TUser user) : Task\<string>
+	- GenerateEmailConfirmationTokenAsync(TUser user) : Task\<string>
+	- GenerateNewAuthenticatorKey() : string
+	- GenerateNewTwoFactorRecoveryCodesAsync(...) : Task<IEnumerable\<string>>
+		- TUser user, 
+		- int number
+	- GeneratePasswordResetTokenAsync(TUser user) : Task\<string>
+	- GenerateTwoFactorTokenAsync(...) : Task\<string>
+		- TUser user, 
+		- string tokenProvider
+	- GenerateUserTokenAsync(...) : Task\<string>
+		- TUser user, 
+		- string tokenProvider, 
+		- string purpose
+	- GetAccessFailedCountAsync(TUser user) : Task\<int>
+	- GetAuthenticationTokenAsync(...) : Task\<string>
+		- TUser user, 
+		- string loginProvider, 
+		- string tokenName
+	- GetAuthenticatorKeyAsync(TUser user) : Task\<string>
+	- GetChangeEmailTokenPurpose(string newEmail) : Task\<string>
+	- GetClaimsAsync(TUser user) : Task<IList\<Claim>>
+	- GetEmailAsync(TUser user) : Task\<string>
+	- GetLockoutEnabledAsync(TUser user) : Task\<bool>
+	- GetLockoutEndDateAsync(TUser user) : Task<System.DateTimeOffset?>
+	- GetLoginsAsync(TUser user) : Task<IList\<UserLoginInfo>>
+	- GetPasskeyAsync(TUser user, byte[] credentialId) : Task\<UserPasskeyInfo>
+	- GetPasskeysAsync(TUser user) : Task<IList\<UserPasskeyInfo>>
+	- GetPhoneNumberAsync(TUser user) : Task\<string>
+	- GetRolesAsync(TUser user) : Task<IList\<string>>
+	- GetSecurityStampAsync(TUser user) : Task\<string>
+	- GetTwoFactorEnabledAsync(TUser user) : Task\<bool>
+	- GetUserAsync(ClaimsPrincipal principal) : Task\<TUser>
+	- GetUserId(ClaimsPrincipal principal) : string
+	- GetUserIdAsync(TUser user) : Task\<string>
+	- GetUserName(ClaimsPrincipal principal) : string
+	- GetUserNameAsync(TUser user) : Task\<string>
+	- GetUsersForClaimAsync(Claim claim) : Task<IList\<TUser>> 
+	- GetUsersInRoleAsync(string roleName) : Task<IList\<TUser>> 
+	- GetValidTwoFactorProvidersAsync(TUser user) : Task<IList\<string>>
+	- HasPasswordAsync(TUser user) : Task\<bool>
+	- IsEmailConfirmedAsync(TUser user) : Task\<bool>
+	- IsInRoleAsync(TUser user, string role) : Task\<bool>
+	- IsLockedOutAsync(TUser user) : Task\<bool>
+	- IsPhoneNumberConfirmedAsync(TUser user) : Task\<bool>
+	- NormalizeEmail(string email) : string
+	- NormalizeName(string name) : string
+	- RedeemTwoFactorRecoveryCodeAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string code
+	- RegisterTokenProvider(...)
+		- string providerName, 
+		- IUserTwoFactorTokenProvider\<TUser> provider
+	- RemoveAuthenticationTokenAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string loginProvider, 
+		- string tokenName
+	- RemoveClaimAsync(TUser user, Claim claim) : Task\<IdentityResult>
+	- RemoveClaimsAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- IEnumerable\<Claim> claims
+	- RemoveFromRoleAsync(TUser user, string role) : Task\<IdentityResult>
+	- RemoveFromRolesAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- IEnumerable\<string> roles
+	- RemoveLoginAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string loginProvider, 
+		- string providerKey
+	- RemovePasskeyAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- byte[] credentialId
+	- RemovePasswordAsync(TUser user) : Task\<IdentityResult>
+	- ReplaceClaimAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- Claim claim, 
+		- Claim newClaim
+	- ResetAccessFailedCountAsync(TUser user) : Task\<IdentityResult>
+	- ResetAuthenticatorKeyAsync(TUser user) : Task\<IdentityResult>
+	- ResetPasswordAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string token, 
+		- string newPassword
+	- SetAuthenticationTokenAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string loginProvider, 
+		- string tokenName, 
+		- string tokenValue
+	- SetEmailAsync(TUser user, string email) : Task\<IdentityResult>
+	- SetLockoutEnabledAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- bool enabled
+	- SetLockoutEndDateAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- System.DateTimeOffset? lockoutEnd
+	- SetPhoneNumberAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string phoneNumber
+	- SetTwoFactorEnabledAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- bool enabled
+	- SetUserNameAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string userName
+	- UpdateAsync(TUser user) : Task\<IdentityResult>
+	- UpdateNormalizedEmailAsync(TUser user)
+	- UpdateNormalizedUserNameAsync(TUser user)
+	- UpdatePasswordHash(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string newPassword, 
+		- bool validatePassword
+	- UpdateSecurityStampAsync(TUser user) : Task\<IdentityResult>
+	- UpdateUserAsync(TUser user) : Task\<IdentityResult>
+	- ValidatePasswordAsync(...) : Task\<IdentityResult>
+		- TUser user, 
+		- string password
+	- ValidateUserAsync(TUser user) : Task\<IdentityResult>
+	- VerifyChangePhoneNumberTokenAsync(...) : Task\<bool>
+		- TUser user, 
+		- string token, 
+		- string phoneNumber
+	- VerifyPasswordAsync(...) " Task\<PasswordVerificationResult> 
+		- IUserPasswordStore\<TUser> store, 
+		- TUser user, 
+		- string password
+	- VerifyTwoFactorTokenAsync(...) : Task\<bool>
+		- TUser user, 
+		- string tokenProvider, 
+		- string token
+	- VerifyUserTokenAsync(...) : Task\<bool>
+		- TUser user, 
+		- string tokenProvider, 
+		- string purpose, 
+		- string token
 	- ErrorDescriber : IdentityErrorDescriber
+	- KeyNormalizer : ILookupNormalizer
 	- Options : IdentityOptions
+	- PasswordHasher : IPasswordHasher\<TUser>
+	- PasswordValidators : IList<IPasswordValidator\<TUser>> 
+	- ServiceProvider : IServiceProvider 
+	- Store : IUserStore\<TUser>
 	- SupportsQueryableUsers : bool
+	- SupportsUserAuthenticationTokens : bool
+	- SupportsUserAuthenticatorKey : bool
 	- SupportsUserClaim : bool
 	- SupportsUserEmail : bool
 	- SupportsUserLockout : bool
@@ -248,6 +418,8 @@ IdentityBuilder identityBuilder = services
 	- SupportsUserSecurityStamp : bool
 	- SupportsUserTwoFactor : bool
 	- SupportsUserTwoFactorRecoveryCodes : bool
+	- Users : IQueryable\<TUser>
+	- UserValidators : IList<IUserValidator\<TUser>>
 	- **UserManager(...)**
 		- **IUserStore\<TUser>** store, 
 		- IOptions\<IdentityOptions> optionsAccessor, 
@@ -259,8 +431,37 @@ IdentityBuilder identityBuilder = services
 		- IServiceProvider services, 
 		- ILogger<UserManager\<TUser>> logger
 - UserOptions
+	- AllowedUserNameCharacters : string
+	- RequireUniqueEmail : bool
 - UserPasskeyInfo
+	- UserPasskeyInfo(...)
+		- byte[] credentialId, 
+		- byte[] publicKey, 
+		- System.DateTimeOffset createdAt, 
+		- uint signCount, 
+		- string[] transports, 
+		- bool isUserVerified, 
+		- bool isBackupEligible, 
+		- bool isBackedUp, 
+		- byte[] attestationObject, 
+		- byte[] clientDataJson
+	- AttestationObject : bool
+	- ClientDataJson : byte[]
+	- CreatedAt : System.DateTimeOffset
+	- CredentialId : byte[]
+	- IsBackedUp : bool
+	- IsBackupEligible : bool
+	- IsUserVerified : bool
+	- Name : string
+	- PublicKey : byte[]
+	- SignCount : int
+	- Transports : string[]
 - UserValidator\<TUser> : IUserValidator\<TUser>
+	- UserValidator(IdentityErrorDescriber errors = null)
+	- ValidateAsync(...) : Task\<IdentityResult>
+		- UserManager\<TUser> manager, 
+		- TUser user
+	- Describer : IdentityErrorDescriber
 
 ## System.Security.Claims
 
@@ -354,11 +555,11 @@ Services.ConfigureApplicationCookie(options =>
 		- string redirectUrl, 
 		- [string userId = null]
 	- CreateUserPrincipalAsync(TUser user) : Task\<ClaimsPrincipal>
-	- ExternalLoginSignInAsync(...) : Task\<SignInResult>
+	- **ExternalLoginSignInAsync**(...) : Task\<SignInResult>
 		- string loginProvider, 
 		- string providerKey, 
 		- bool isPersistent
-	- ExternalLoginSignInAsync(...) : Task\<SignInResult>
+	- **ExternalLoginSignInAsync**(...) : Task\<SignInResult>
 		- string loginProvider, 
 		- string providerKey, 
 		- bool isPersistent, 
@@ -371,19 +572,19 @@ Services.ConfigureApplicationCookie(options =>
 	- IsSignedIn(ClaimsPrincipal principal) : bool
 	- IsTwoFactorClientRememberedAsync(TUser user) : Task\<bool>
 	- LockedOut(TUser user) : Task\<SignInResult>
-	- PasswordSignInAsync(...) : Task\<SignInResult>
+	- **PasswordSignInAsync**(...) : Task\<SignInResult>
 		- string userName, 
 		- string password, 
 		- bool isPersistent, 
 		- bool lockoutOnFailure
-	- PasswordSignInAsync(...) : Task\<SignInResult>
+	- **PasswordSignInAsync**(...) : Task\<SignInResult>
 		- TUser user, 
 		- string password, 
 		- bool isPersistent, 
 		- bool lockoutOnFailure
 	- PreSignInCheck(TUser user) : Task\<SignInResult>
 	- RefreshSignInAsync(TUser user)
-	- RememberTwoFactorClientAsync(TUser user) : Task
+	- **RememberTwoFactorClientAsync**(TUser user) : Task
 	- ResetLockout(TUser user) : Task
 	- **SignInAsync()**
 		- TUser user, 
@@ -406,7 +607,7 @@ Services.ConfigureApplicationCookie(options =>
 		- [string loginProvider = null], 
 		- [bool bypassTwoFactor = False]
 	- SignOutAsync()
-	- TwoFactorAuthenticatorSignInAsync(...) : Task\<SignInResult>
+	- **TwoFactorAuthenticatorSignInAsync**(...) : Task\<SignInResult>
 		- string code, 
 		- bool isPersistent, 
 		- bool rememberClient

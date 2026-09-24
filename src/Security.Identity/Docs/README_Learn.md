@@ -1291,3 +1291,319 @@ The **cookie scheme is not connected directly to your custom store**. The connec
 1. -> CustomUserStore
 
 A good next learning step is understanding **why AddIdentityCore() alone is not enough for SignInManager and cookie authentication**, and what additional services **AddIdentity()** adds behind the scenes. That's often where custom Identity implementations run into DI configuration problems.
+
+# Default Identity Configuration
+
+## Big Picture
+
+When you call:
+
+```csharp
+services.AddIdentity<ApplicationUser, IdentityRole>();
+```
+
+Identity automatically registers **four separate cookie authentication handlers**.
+
+Think of them as **four different** "**identity storage buckets**", each used for a specific authentication scenario:
+
+- User Browser
+    - Application Cookie (User is fully signed in)
+    - External Cookie (User is signing in through Google/Azure AD/etc.)
+    - 2FA UserId Cookie (User passed password, waiting for 2FA)
+    - 2FA RememberMe Cookie (Device trusted for future logins)
+
+## 1. IdentityConstants.ApplicationScheme
+
+- IdentityConstants.ApplicationScheme
+
+Usually resolves to:
+
+- "Identity.Application"
+
+### Purpose
+
+This is the **main login cookie**.
+
+After a user successfully signs in, Identity stores the user's claims in this cookie.
+
+### Flow
+
+1. Login Page
+1. -> Username + Password valid
+1. -> SignInManager.SignInAsync()
+1. -> Create Application Cookie
+1. -> Browser stores cookie
+1. -> Future requests use this cookie
+
+### Example
+
+User logs in:
+
+```csharp
+await signInManager.PasswordSignInAsync(
+    model.Email,
+    model.Password,
+    true,
+    false);
+```
+
+Internally:
+
+```csharp
+await HttpContext.SignInAsync(
+    IdentityConstants.ApplicationScheme,
+    principal);
+```
+
+### What's inside?
+
+Claims such as:
+
+- NameIdentifier = 123
+- Name = Bob
+- Role = Admin
+- Role = User
+
+### Used by
+
+```csharp
+[Authorize]
+```
+
+Most authorization checks depend on this scheme.
+
+## 2. IdentityConstants.ExternalScheme
+
+- IdentityConstants.ExternalScheme
+
+Usually:
+
+- "Identity.External"
+
+### Purpose
+
+Temporary cookie used during an external login flow.
+
+Examples:
+
+- Google
+- Microsoft
+- Facebook
+- Azure AD
+- OpenID Connect provider
+
+### Why is it needed?
+
+External authentication requires redirects.
+
+Example:
+
+1. Your App
+1. -> Google Login
+1. -> Google redirects back
+1. -> Need temporary place to store identity
+1. -> External Cookie
+
+The application cookie cannot yet be created because Identity must first determine:
+
+- Does this user already exist?
+- Is there a linked account?
+- Should a new account be created?
+
+### Flow
+
+1. Click Login With Google
+1. -> Redirect to Google
+1. -> Google authenticates user
+1. -> Google returns claims
+1. -> Store claims in External Cookie
+1. -> Identity reads External Cookie
+1. -> Link/Create account
+1. -> Create Application Cookie
+1. -> Delete External Cookie
+
+### Lifetime
+
+Very short.
+
+It's a temporary staging area.
+
+Think:
+
+> External cookie = "holding area for external provider information."
+
+## 3. IdentityConstants.TwoFactorUserIdScheme
+
+- IdentityConstants.TwoFactorUserIdScheme
+
+Usually:
+
+- "Identity.TwoFactorUserId"
+
+### Purpose
+
+Temporary cookie used while a user is in the middle of a 2FA login process.
+
+### Scenario
+
+Suppose:
+
+- Username = Bob
+- Password = Correct
+- 2FA = Enabled
+
+Identity cannot issue the main application cookie yet because the user is only partially authenticated.
+
+### Flow
+
+1. Username + Password
+1. -> Valid
+1. -> Need 2FA code
+1. -> Create TwoFactorUserId Cookie
+1. -> Redirect to VerifyAuthenticator
+1. -> User enters code
+1. -> Create Application Cookie
+1. -> Delete TwoFactorUserId Cookie
+
+### What's stored?
+
+Primarily:
+
+- UserId
+
+or enough information so Identity knows:
+
+> "Which user is currently completing the 2FA challenge?"
+
+### Why not use Session?
+
+Because Identity authentication is built around authentication handlers and cookies, making it stateless across web servers.
+
+### Think of it as
+
+> "Pending Login Cookie"
+
+The user is:
+
+- Password verified
+- Not fully authenticated yet
+
+## 4. IdentityConstants.TwoFactorRememberMeScheme
+
+- IdentityConstants.TwoFactorRememberMeScheme
+
+Usually:
+
+- "Identity.TwoFactorRememberMe"
+
+### Purpose
+
+Stores information that a device is trusted and can skip 2FA next time.
+
+### Example
+
+User logs in:
+
+- Username
+- Password
+- Authenticator Code
+- [X] Remember this device
+
+Identity creates:
+
+- TwoFactorRememberMe Cookie
+
+Next login:
+
+- Username
+- Password
+
+Identity checks:
+
+- Trusted Device Cookie Exists?
+
+If yes:
+
+- Skip 2FA
+
+### Flow
+
+1. First Login
+1. -> Password OK
+1. -> 2FA Code OK
+1. -> Remember Device
+1. -> Create RememberMe Cookie
+1. -> Next Login
+1. -> Password OK
+1. -> RememberMe Cookie Found
+1. -> Skip 2FA
+1. -> Application Cookie Created
+
+### Important
+
+This cookie does not authenticate the user.
+
+It only says:
+
+- "This browser has already passed 2FA previously."
+
+The user must still provide username/password.
+
+## How They Work Together
+
+A complete login lifecycle looks like:
+
+PASSWORD LOGIN
+
+1. Password Valid
+1. TwoFactorUserId Cookie
+1. Enter OTP
+1. Application Cookie
+1. Authenticated
+
+EXTERNAL LOGIN
+
+1. Google Login
+1. External Cookie
+1. Link/Create Account
+1. Application Cookie
+1. Authenticated
+
+TRUSTED DEVICE LOGIN
+
+1. Password Valid
+1. TwoFactorRememberMe Exists?
+1. Yes
+1. Application Cookie
+1. Authenticated
+
+### Mental Model
+
+Think of the four cookies as different authentication states:
+
+| Scheme | State |
+|--------|-------|
+| ApplicationScheme | Fully authenticated user |
+| ExternalScheme | User returned from Google/Azure AD and waiting to be processed |
+| TwoFactorUserIdScheme | Password verified, waiting for OTP |
+| TwoFactorRememberMeScheme | Device trusted to bypass OTP next time |
+
+A useful way to remember them is:
+
+- Application  = Logged In
+- External     = Coming From Google
+- 2FA UserId   = Waiting For OTP
+- 2FA Remember = Trusted Device
+
+This design allows Identity to model authentication as a state machine, where users move through intermediate states (external login, 2FA challenge) before finally receiving the main ApplicationScheme cookie.
+
+To deepen your understanding, next study SignInManager internals, especially these methods:
+
+```csharp
+PasswordSignInAsync();
+ExternalLoginSignInAsync();
+TwoFactorAuthenticatorSignInAsync();
+RememberTwoFactorClientAsync();
+```
+
+Those four methods directly correspond to the four cookie schemes and make the overall Identity flow much easier to follow.

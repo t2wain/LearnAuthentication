@@ -146,7 +146,7 @@ namespace Security.Identity.IdentityCore
 
         public virtual void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         public virtual Task<string?> GetEmailAsync(IAppUser user, CancellationToken cancellationToken)

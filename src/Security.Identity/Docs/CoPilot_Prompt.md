@@ -16,4 +16,13 @@ Please explain to me about the following:
 - When sign-in with SignInManager, I can create a ClaimPrincipal object based
 - Can Microsoft.Extensions.Identity.Core be used in Windows desktop application?
 - Is there a corresponding concept similar to Microsoft.AspNetCore.Authorization for desktop application?
-- Is there already a class th
+
+
+service.AddIdentity setup 4 schemes using CookieAuthenticationHandler:
+
+- IdentityConstants.ApplicationScheme
+- IdentityConstants.ExternalScheme
+- IdentityConstants.TwoFactorRememberMeScheme
+- IdentityConstants.TwoFactorUserIdScheme
+
+Explain the logic of each scheme

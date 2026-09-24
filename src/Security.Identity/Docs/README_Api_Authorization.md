@@ -34,11 +34,11 @@
 	- AuthorizationFailureReason(IAuthorizationHandler handler, string message)
 	- Handler : IAuthorizationHandler
 	- Message : string
-- **AuthorizationHandler<TRequirement, TResource>** : IAuthorizationHandler
+- **AuthorizationHandler<TRequirement, TResource>** : IAuthorizationHandler (abstract)
 	- (abstract)
 	- where TRequirement : IAuthorizationRequirement
 	- HandleAsync(**AuthorizationHandlerContext** context)
-- AuthorizationHandler\<TRequirement> : IAuthorizationHandler 
+- AuthorizationHandler\<TRequirement> : IAuthorizationHandler (abstract)
 	- (abstract)
 	- HandleAsync(AuthorizationHandlerContext context)
 - **AuthorizationHandlerContext**
@@ -119,6 +119,8 @@
 	- **Policy** 
 	- **Roles** 
 - DefaultAuthorizationEvaluator : IAuthorizationEvaluator
+	- DefaultAuthorizationEvaluator()
+	- Evaluate(AuthorizationHandlerContext context) : AuthorizationResult 
 - DefaultAuthorizationHandlerContextFactory : IAuthorizationHandlerContextFactory
 	- CreateContext(...) : AuthorizationHandlerContext
 		- IEnumerable\<IAuthorizationRequirement> requirements, 
@@ -151,6 +153,35 @@
 		- **IAuthorizationHandlerContextFactory** contextFactory, 
 		- **IAuthorizationEvaluator** evaluator, 
 		- **IOptions\<AuthorizationOptions>** options
+- IAuthorizationEvaluator
+	- Evaluate(AuthorizationHandlerContext context) : AuthorizationResult 
+- IAuthorizationHandler
+	- HandleAsync(AuthorizationHandlerContext context) : Task
+- IAuthorizationHandlerContextFactory
+	- CreateContext(...) : AuthorizationHandlerContext
+		- IEnumerable\<IAuthorizationRequirement> requirements, 
+		- ClaimsPrincipal user, 
+		- object resource
+- IAuthorizationHandlerProvider
+	- GetHandlersAsync(...) : Task<IEnumerable\<IAuthorizationHandler>> 
+		- AuthorizationHandlerContext context
+- IAuthorizationPolicyProvider
+	- GetDefaultPolicyAsync() : Task\<AuthorizationPolicy> 
+	- GetFallbackPolicyAsync() : Task\<AuthorizationPolicy> 
+	- GetPolicyAsync(string policyName) : Task\<AuthorizationPolicy> 
+	- AllowsCachingPolicies : bool
+- IAuthorizationRequirement
+- IAuthorizationRequirementData
+	- GetRequirements() : IEnumerable\<IAuthorizationRequirement>
+- IAuthorizationService
+	- AuthorizeAsync(...) : Task\<AuthorizationResult>
+		- ClaimsPrincipal user, 
+		- object resource, 
+		- string policyName
+	- AuthorizeAsync(...) : Task\<AuthorizationResult>
+		- ClaimsPrincipal user, 
+		- object resource, 
+		- IEnumerable\<IAuthorizationRequirement> requirements
 
 ## Microsoft.AspNetCore.Authorization.Infrastructure
 
