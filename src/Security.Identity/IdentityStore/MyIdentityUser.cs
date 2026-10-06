@@ -6,7 +6,7 @@ namespace Security.Identity.IdentityStore
     /// <summary>
     /// Documenting IdentityUser properties from library
     /// </summary>
-    public class AppIdentityUser : IdentityUser, IAppUser
+    public class MyIdentityUser : IdentityUser, IMyUser
     {
         public override int AccessFailedCount { get => base.AccessFailedCount; set => base.AccessFailedCount = value; }
         public override string? ConcurrencyStamp { get => base.ConcurrencyStamp; set => base.ConcurrencyStamp = value; }

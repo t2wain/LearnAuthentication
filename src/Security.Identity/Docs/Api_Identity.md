@@ -13,7 +13,7 @@
 
 ## System.Security.Claims
 
-- Claim
+- **Claim**
 	- Claim(string type, string value)
 	- Claim(string type, string value, string valueType)
 	- Claim(string type, string value, string valueType, string issuer)
@@ -30,13 +30,131 @@
 		- string issuer, 
 		- string originalIssuer, 
 		- ClaimsIdentity subject
-	- Type : string
-	- Value 
-	- ValueType 
-	- Issuer 
+	- Clone() : Claim
+	- Clone(ClaimsIdentity identity) : Claim
+	- Issuer : string
 	- OriginalIssuer 
 	- Properties : IDictionary\<string, string>
 	- Subject : ClaimsIdentity
+	- Type : string
+	- Value : string
+	- ValueType : string
+- **ClaimsIdentity** : IIdentity
+	- ClaimsIdentity()
+	- ClaimsIdentity(string authenticationType)
+	- ClaimsIdentity(...)
+		- string authenticationType, 
+		- string nameType, 
+		- string roleType
+	- ClaimsIdentity(IEnumerable\<Claim> claims)
+	- ClaimsIdentity(IEnumerable\<Claim> claims, string authenticationType)
+	- ClaimsIdentity(...)
+		- IEnumerable\<Claim> claims, 
+		- string authenticationType, 
+		- string nameType, 
+		- string roleType
+	- ClaimsIdentity(IIdentity identity)
+	- ClaimsIdentity(IIdentity identity, IEnumerable\<Claim> claims)
+	- ClaimsIdentity(...)
+		- IIdentity identity, 
+		- IEnumerable\<Claim> claims, 
+		- string authenticationType, 
+		- string nameType, 
+		- string roleType
+	- ClaimsIdentity(...)
+		- [IIdentity identity = null], 
+		- [IEnumerable\<Claim> claims = null], 
+		- [string authenticationType = null], 
+		- [string nameType = null], 
+		- [string roleType = null], 
+		- [System.StringComparison stringComparison = 5]
+	- AddClaim(Claim claim)
+	- AddClaims(IEnumerable\<Claim> claims)
+	- Clone() : ClaimsIdentity
+	- FindAll(string type) : IEnumerable\<Claim> 
+	- FindAll(System.Predicate\<Claim> match) : IEnumerable\<Claim> 
+	- FindFirst(string type) : Claim
+	- FindFirst(System.Predicate\<Claim> match) : Claim
+	- HasClaim(string type, string value) : bool
+	- HasClaim(System.Predicate\<Claim> match) : bool
+	- RemoveClaim(Claim claim)
+	- TryRemoveClaim(Claim claim) : bool
+	- Actor : ClaimsIdentity
+	- **AuthenticationType** : string
+	- BootstrapContext : object
+	- Claims : IEnumerable\<Claim>
+	- **IsAuthenticated** : bool
+	- Label : string
+	- Name : string
+	- NameClaimType : string
+	- RoleClaimType : string
+	- DefaultIssuer : string
+	- DefaultNameClaimType : string
+	- DefaultRoleClaimType : string
+- **ClaimsPrincipal** : IPrincipal
+	- ClaimsPrincipal()
+	- ClaimsPrincipal(IEnumerable\<ClaimsIdentity> identities)
+	- ClaimsPrincipal(IIdentity identity)
+	- ClaimsPrincipal(IPrincipal principal)
+	- AddIdentities(IEnumerable\<ClaimsIdentity> identities)
+	- AddIdentity(ClaimsIdentity identity)
+	- Clone() : ClaimsPrincipal
+	- FindAll(string type) : IEnumerable\<Claim>
+	- FindAll(System.Predicate\<Claim> match) : IEnumerable\<Claim>
+	- FindFirst(string type) : Claim
+	- FindFirst(System.Predicate\<Claim> match) : Claim
+	- HasClaim(string type, string value) : bool
+	- HasClaim(System.Predicate\<Claim> match) : bool
+	- IsInRole(string role) : bool
+	- Claims : IEnumerable\<Claim>
+	- ClaimsPrincipalSelector : System.Func\<ClaimsPrincipal>
+	- Current : ClaimsPrincipal
+	- **Identities** : IEnumerable\<ClaimsIdentity>
+	- **Identity** : IIdentity
+	- PrimaryIdentitySelector : System.Func<IEnumerable\<ClaimsIdentity>, ClaimsIdentity> 
+- ClaimTypes
+	- Anonymous
+	- Authentication
+	- CookiePath
+	- Email
+	- Expiration
+	- Expired
+	- GivenName
+	- GroupSid
+	- IsPersistent
+	- Locality
+	- Name
+	- NameIdentifier
+	- PrimaryGroupSid
+	- PrimarySid
+	- Role
+	- Sid
+	- Surname
+	- Upn
+	- Uri
+	- UserData
+	- WindowsAccountName
+	- WindowsUserClaim
+- ClaimValueTypes
+	- Boolean
+	- Date
+	- DateTime
+	- DaytimeDuration
+
+## System.Security.Principal
+
+- **GenericIdentity** : ClaimsIdentity
+	- GenericIdentity(string name)
+	- GenericIdentity(string name, string type)
+	- Clone() : GenericIdentity
+	- **AuthenticationType** : string
+	- Claims : IEnumerable\<Claim>
+	- IsAuthenticated : bool
+	- Name : string
+- **GenericPrincipal** : ClaimsPrincipal
+	- GenericPrincipal(IIdentity identity, string[] roles)
+	- IsInRole(string role) : bool
+	- Identity : IIdentity
 
 # Assembly : Microsoft.Extensions.Identity.Core
 
@@ -472,11 +590,11 @@ IdentityBuilder identityBuilder = services
 
 ## Microsoft.Extensions.DependencyInjection
 
-- IdentityServiceCollectionExtensions
-	- **AddIdentity<TUser, TRole>()**
-	- AddIdentity<TUser, TRole>(Action\<IdentityOptions> setupAction)
-	- **ConfigureApplicationCookie**(Action\<**CookieAuthenticationOptions**> configure)
-	- ConfigureExternalCookie(System.Action\<CookieAuthenticationOptions> configure)
+- IdentityServiceCollectionExtensions (this IServiceCollection)
+	- **AddIdentity<TUser, TRole>()** : IdentityBuilder 
+	- AddIdentity<TUser, TRole>(Action\<IdentityOptions> setupAction) : IdentityBuilder
+	- **ConfigureApplicationCookie**(Action\<**CookieAuthenticationOptions**> configure) : IServiceCollection
+	- ConfigureExternalCookie(System.Action\<CookieAuthenticationOptions> configure) : IServiceCollection
 
 ```csharp
 Services.ConfigureApplicationCookie(options =>
@@ -502,7 +620,7 @@ Services.ConfigureApplicationCookie(options =>
 	- **AddSignInManager()**
 	- **AddSignInManager\<TSignInManager>()**
 
-**IdentityConstants** is used to specify the authentication schemes.
+**IdentityConstants** is used to specify the identity default authentication schemes.
 
 - **IdentityConstants**
 	- **ApplicationScheme**

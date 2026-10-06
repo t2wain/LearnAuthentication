@@ -26,3 +26,5 @@ service.AddIdentity setup 4 schemes using CookieAuthenticationHandler:
 - IdentityConstants.TwoFactorUserIdScheme
 
 Explain the logic of each scheme
+
+I want to create unit test for SignInManager and the authentication process of ASP.NET Core. Provide recommendations on how to provide an HttpContext for these test.

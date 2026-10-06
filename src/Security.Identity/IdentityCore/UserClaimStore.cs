@@ -3,19 +3,19 @@ using System.Security.Claims;
 
 namespace Security.Identity.IdentityCore
 {
-    public class UserClaimStore : IUserClaimStore<IAppUser>
+    public class UserClaimStore : IUserClaimStore<IMyUser>
     {
-        public Task AddClaimsAsync(IAppUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+        public Task AddClaimsAsync(IMyUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IdentityResult> CreateAsync(IAppUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> CreateAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IdentityResult> DeleteAsync(IAppUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> DeleteAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -25,62 +25,62 @@ namespace Security.Identity.IdentityCore
             throw new NotImplementedException();
         }
 
-        public Task<IAppUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public Task<IMyUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IAppUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public Task<IMyUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IList<Claim>> GetClaimsAsync(IAppUser user, CancellationToken cancellationToken)
+        public Task<IList<Claim>> GetClaimsAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<string?> GetNormalizedUserNameAsync(IAppUser user, CancellationToken cancellationToken)
+        public Task<string?> GetNormalizedUserNameAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<string> GetUserIdAsync(IAppUser user, CancellationToken cancellationToken)
+        public Task<string> GetUserIdAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<string?> GetUserNameAsync(IAppUser user, CancellationToken cancellationToken)
+        public Task<string?> GetUserNameAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IList<IAppUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
+        public Task<IList<IMyUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveClaimsAsync(IAppUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+        public Task RemoveClaimsAsync(IMyUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task ReplaceClaimAsync(IAppUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
+        public Task ReplaceClaimAsync(IMyUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetNormalizedUserNameAsync(IAppUser user, string? normalizedName, CancellationToken cancellationToken)
+        public Task SetNormalizedUserNameAsync(IMyUser user, string? normalizedName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetUserNameAsync(IAppUser user, string? userName, CancellationToken cancellationToken)
+        public Task SetUserNameAsync(IMyUser user, string? userName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IdentityResult> UpdateAsync(IAppUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> UpdateAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

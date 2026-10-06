@@ -29,11 +29,13 @@ namespace Security.ConsoleApp
             HostApplicationBuilder builder = Host.CreateApplicationBuilder([]);
 
             AppService appService = new(builder.Services, builder.Configuration);
-            appService.AddIdentity();
-            appService.AddAuthorization();
-            appService.AddOtherServices();
+            appService.AddMyIdentity();
+            appService.AddMyAuthorization();
+            appService.AddMyOtherServices();
+            appService.AddTestHttpContextAccessor();
 
             IHost app = builder.Build();
+
             return app;
         }
 

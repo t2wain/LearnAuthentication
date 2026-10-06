@@ -5,16 +5,18 @@ namespace Security.Identity.Example
 {
     public class ExploreIdentity
     {
-        IUserStore<IAppUser> _userStore;
-        IRoleStore<IAppRole> _roleStore;
-        UserManager<IAppUser> _userManager;
-        RoleManager<IAppRole> _roleManager;
+        #region Init
+
+        IUserStore<IMyUser> _userStore;
+        IRoleStore<IMyRole> _roleStore;
+        UserManager<IMyUser> _userManager;
+        RoleManager<IMyRole> _roleManager;
 
         public ExploreIdentity(
-            IUserStore<IAppUser> userStore,
-            IRoleStore<IAppRole> roleStore,
-            UserManager<IAppUser> userManager,
-            RoleManager<IAppRole> roleManager
+            IUserStore<IMyUser> userStore,
+            IRoleStore<IMyRole> roleStore,
+            UserManager<IMyUser> userManager,
+            RoleManager<IMyRole> roleManager
         )
         {
             this._userStore = userStore;
@@ -23,15 +25,17 @@ namespace Security.Identity.Example
             this._roleManager = roleManager;
         }
 
+        #endregion
+
         #region UserManager
 
         public void ExporeUserManager()
         {
             ILookupNormalizer o = _userManager.KeyNormalizer;
             IdentityOptions o2 = _userManager.Options;
-            IPasswordHasher<IAppUser> o3 = _userManager.PasswordHasher;
-            IList<IPasswordValidator<IAppUser>> o4 = _userManager.PasswordValidators;
-            IList<IUserValidator<IAppUser>> o5 = _userManager.UserValidators;
+            IPasswordHasher<IMyUser> o3 = _userManager.PasswordHasher;
+            IList<IPasswordValidator<IMyUser>> o4 = _userManager.PasswordValidators;
+            IList<IUserValidator<IMyUser>> o5 = _userManager.UserValidators;
 
             bool b = _userManager.SupportsQueryableUsers;
             b = _userManager.SupportsQueryableUsers;

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Security.Identity.Example;
 using Security.Identity.IdentityCore;
 
@@ -19,26 +22,34 @@ namespace Security.Identity
             this._config = config;
         }
 
-        public virtual void AddIdentity()
+        public virtual void AddMyIdentity()
         {
 
-            _services.AddScoped<IdentityCoreStore>();
-            _services.AddScoped<IUserStore<IAppUser>, IdentityCoreStore>();
+            _services.AddScoped<MyUserStore>();
+            _services.AddScoped<IUserStore<IMyUser>, MyUserStore>();
 
-            _services.AddScoped<RoleStore>();
-            _services.AddScoped<IRoleStore<IAppRole>, RoleStore>();
+            _services.AddScoped<MyRoleStore>();
+            _services.AddScoped<IRoleStore<IMyRole>, MyRoleStore>();
 
             // Identity services with authentication
-            IdentityBuilder identityBuilder = _services
-                //.AddIdentityCore<IAppUser>()
-                .AddIdentity<IAppUser, IAppRole>((IdentityOptions setupOption) => 
-                { 
+            IdentityBuilder b1 = _services
+                //.AddIdentityCore<IMyUser>()
+                .AddIdentity<IMyUser, IMyRole>((IdentityOptions setupOption) =>
+                {
                     _config.Bind("IdentityOptions", setupOption);
                 })
                 .AddSignInManager()
-                .AddUserStore<IdentityCoreStore>()
-                .AddRoleStore<RoleStore>()
+                .AddUserStore<MyUserStore>()
+                .AddRoleStore<MyRoleStore>()
                 .AddDefaultTokenProviders();
+
+            AuthenticationBuilder b2 = _services.AddAuthentication((AuthenticationOptions options) =>
+            {
+                _config.Bind("AuthenticationOptions", options);
+                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
+            });
 
             _services.ConfigureApplicationCookie((CookieAuthenticationOptions configureOptions) =>
             {
@@ -46,7 +57,7 @@ namespace Security.Identity
             });
         }
 
-        public virtual void AddAuthorization()
+        public virtual void AddMyAuthorization()
         {
             _services.AddAuthorizationCore((AuthorizationOptions configure) =>
             {
@@ -54,11 +65,16 @@ namespace Security.Identity
             });
         }
 
-        public virtual void AddOtherServices()
+        public virtual void AddMyOtherServices()
         {
             _services.AddScoped<ExploreIdentity>();
             _services.AddScoped<ExploreAuthentication>();
             _services.AddScoped<ExploreAuthorization>();
+        }
+
+        public void AddTestHttpContextAccessor()
+        {
+            _services.AddSingleton<IHttpContextAccessor, MyHttpContextAccessor>();
         }
     }
 }

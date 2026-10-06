@@ -1,0 +1,1 @@
+The purpose of this project is to document and to learn the authentication and authorization mechanisms in ASP.NET Core. This project will serve as a reference for implementing secure authentication and authorization in .NET applications.

@@ -253,7 +253,7 @@ AuthenticationBuilder authBuilder = services
 	- HandleChallengeAsync(AuthenticationProperties properties) : Task
 	- HandleForbiddenAsync(AuthenticationProperties properties) : Task
 	- InitializeEventsAsync() : Task
-	- nitializeHandlerAsync() : Task
+	- InitializeHandlerAsync() : Task
 	- ResolveTarget(string scheme) : string
 	- ClaimsIssuer : string
 	- Clock  : ISystemClock
@@ -494,19 +494,19 @@ AuthenticationBuilder authBuilder = services
 	- Ticket : **AuthenticationTicket**
 - **AuthenticationHttpContextExtensions** (HttpContext)
 	- AuthenticateAsync() : Task\<AuthenticateResult>
-	- AuthenticateAsync(string scheme) : Task\<AuthenticateResult>
+	- **AuthenticateAsync**(string scheme) : Task\<AuthenticateResult>
 	- ChallengeAsync() : Task
 	- ChallengeAsync(**AuthenticationProperties** properties) : Task
 	- ChallengeAsync(string scheme) : Task
-	- ChallengeAsync(string scheme, AuthenticationProperties properties) : Task
+	- **ChallengeAsync**(string scheme, AuthenticationProperties properties) : Task
 	- ForbidAsync() : Task
 	- ForbidAsync(AuthenticationProperties properties) : Task
 	- ForbidAsync(string scheme) : Task
-	- ForbidAsync(string scheme, AuthenticationProperties properties) : Task
+	- **ForbidAsync**(string scheme, AuthenticationProperties properties) : Task
 	- GetTokenAsync(string tokenName) : Task\<string>
 	- GetTokenAsync(string scheme, string tokenName) : Task\<string>
 	- SignInAsync(string scheme) : Task
-	- SignInAsync(...) : Task
+	- **SignInAsync**(...) : Task
 		- string scheme, 
 		- ClaimsPrincipal principal, 
 		- AuthenticationProperties properties
@@ -515,7 +515,7 @@ AuthenticationBuilder authBuilder = services
 	- SignOutAsync() : Task
 	- SignOutAsync(AuthenticationProperties properties) : Task
 	- SignOutAsync(string scheme) : Task
-	- SignOutAsync(string scheme, AuthenticationProperties properties) : Task
+	- **SignOutAsync**(string scheme, AuthenticationProperties properties) : Task
 - **AuthenticationOptions**
 	- **AddScheme**(string name, Action\<**AuthenticationSchemeBuilder**> configureBuilder)
 	- AddScheme\<THandler>(string name, string displayName)

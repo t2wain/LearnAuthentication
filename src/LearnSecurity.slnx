@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Others/">
+    <File Path="../README.md" />
+  </Folder>
   <Project Path="Security.ConsoleApp/Security.ConsoleApp.csproj" Id="cac81109-10be-4bc9-8535-6503cf1ab22a" />
   <Project Path="Security.Identity/Security.Identity.csproj" Id="990feba2-7050-4d89-aff7-8c28133060bc" />
   <Project Path="Security.WebApp/Security.WebApp.Client/Security.WebApp.Client.csproj" Id="940b419f-3ea5-449e-af67-e81168a8a4cf" />

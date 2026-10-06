@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.StaticAssets;
 using Security.Identity;
 using Security.WebApp.Components;
 
@@ -8,46 +9,44 @@ namespace Security.WebApp
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
+            IRazorComponentsBuilder b1 = builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
             AppService appService = new(builder.Services, builder.Configuration);
-            appService.AddIdentity();
-            appService.AddOtherServices();
-
-            builder.Services.AddAuthorization((AuthorizationOptions configure) =>
-            {
-                builder.Configuration.Bind("AuthorizationOptions", configure);
-            });
+            appService.AddMyIdentity();
+            appService.AddMyOtherServices();
+            appService.AddMyAuthorization();
 
             WebApplication? app = builder.Build();
+            IApplicationBuilder app2 = app;
+            IEndpointRouteBuilder app3 = app;
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseWebAssemblyDebugging();
+                app2.UseWebAssemblyDebugging();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app2 = app2.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                app2 = app2.UseHsts();
             }
 
-            app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-            app.UseHttpsRedirection();
+            app2 = app2.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+            app2 = app2.UseHttpsRedirection();
 
-            app.UseAntiforgery();
+            app2 = app2.UseAntiforgery();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app2 = app2.UseAuthentication();
+            app2 = app2.UseAuthorization();
 
-            app.MapStaticAssets();
-            app.MapRazorComponents<App>()
+            StaticAssetsEndpointConventionBuilder b2 = app3.MapStaticAssets();
+            RazorComponentsEndpointConventionBuilder b3 = app3.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
                 .AddInteractiveWebAssemblyRenderMode()
                 .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);

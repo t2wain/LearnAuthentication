@@ -2,14 +2,14 @@
 
 namespace Security.Identity.IdentityCore
 {
-    public class UserEmailStore : IUserEmailStore<IAppUser>
+    public class UserEmailStore : IUserEmailStore<IMyUser>
     {
-        public virtual Task<IdentityResult> CreateAsync(IAppUser user, CancellationToken cancellationToken)
+        public virtual Task<IdentityResult> CreateAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<IdentityResult> DeleteAsync(IAppUser user, CancellationToken cancellationToken)
+        public virtual Task<IdentityResult> DeleteAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -19,77 +19,77 @@ namespace Security.Identity.IdentityCore
             throw new NotImplementedException();
         }
 
-        public virtual Task<IAppUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public virtual Task<IMyUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<IAppUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public virtual Task<IMyUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<IAppUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public virtual Task<IMyUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<string?> GetEmailAsync(IAppUser user, CancellationToken cancellationToken)
+        public virtual Task<string?> GetEmailAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<bool> GetEmailConfirmedAsync(IAppUser user, CancellationToken cancellationToken)
+        public virtual Task<bool> GetEmailConfirmedAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<string?> GetNormalizedEmailAsync(IAppUser user, CancellationToken cancellationToken)
+        public virtual Task<string?> GetNormalizedEmailAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<string?> GetNormalizedUserNameAsync(IAppUser user, CancellationToken cancellationToken)
+        public virtual Task<string?> GetNormalizedUserNameAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<string> GetUserIdAsync(IAppUser user, CancellationToken cancellationToken)
+        public virtual Task<string> GetUserIdAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<string?> GetUserNameAsync(IAppUser user, CancellationToken cancellationToken)
+        public virtual Task<string?> GetUserNameAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task SetEmailAsync(IAppUser user, string? email, CancellationToken cancellationToken)
+        public virtual Task SetEmailAsync(IMyUser user, string? email, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task SetEmailConfirmedAsync(IAppUser user, bool confirmed, CancellationToken cancellationToken)
+        public virtual Task SetEmailConfirmedAsync(IMyUser user, bool confirmed, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task SetNormalizedEmailAsync(IAppUser user, string? normalizedEmail, CancellationToken cancellationToken)
+        public virtual Task SetNormalizedEmailAsync(IMyUser user, string? normalizedEmail, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task SetNormalizedUserNameAsync(IAppUser user, string? normalizedName, CancellationToken cancellationToken)
+        public virtual Task SetNormalizedUserNameAsync(IMyUser user, string? normalizedName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task SetUserNameAsync(IAppUser user, string? userName, CancellationToken cancellationToken)
+        public virtual Task SetUserNameAsync(IMyUser user, string? userName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<IdentityResult> UpdateAsync(IAppUser user, CancellationToken cancellationToken)
+        public virtual Task<IdentityResult> UpdateAsync(IMyUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
