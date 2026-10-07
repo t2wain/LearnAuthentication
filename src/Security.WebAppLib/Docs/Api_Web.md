@@ -1,4 +1,14 @@
-﻿# Assembly : Microsoft.AspNetCore.Http.Abstractions
+﻿# Assembly : Microsoft.Net.Http.Headers
+
+## Microsoft.Net.Http.Headers
+
+- CookieHeaderValue
+- HeaderNames
+	- Cookie
+	- SetCookie
+- SetCookieHeaderValue
+
+# Assembly : Microsoft.AspNetCore.Http.Abstractions
 
 ## Microsoft.AspNetCore.Http
 

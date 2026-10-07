@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using Security.WebAppLib.IdentityCore;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -21,6 +23,9 @@ namespace Security.WebAppLib.Example
         UserManager<IMyUser> _userManager;
         SignInManager<IMyUser> _signInManager;
         IHttpContextAccessor _httpContextAccessor;
+
+        public readonly string AuthCookieName = 
+            $"{CookieAuthenticationDefaults.CookiePrefix}{IdentityConstants.ApplicationScheme}";
 
         public ExploreAuthentication(
             IServiceProvider provider,
@@ -78,9 +83,10 @@ namespace Security.WebAppLib.Example
             s = IdentityConstants.TwoFactorUserIdScheme;
             s = IdentityConstants.TwoFactorRememberMeScheme;
 
-            AuthenticationScheme defaultScheme = 
+            AuthenticationScheme? defaultScheme = 
                 await _authenticationSchemeProvider.GetDefaultAuthenticateSchemeAsync();
-            ExploreAuthenticationScheme(defaultScheme);
+            if (defaultScheme != null)
+                ExploreAuthenticationScheme(defaultScheme);
 
             IEnumerable<AuthenticationScheme> schemes = 
                 await this._authenticationSchemeProvider.GetAllSchemesAsync();
@@ -117,7 +123,7 @@ namespace Security.WebAppLib.Example
             {
                 await ExploreAuthenticationSchemeProvider(provider.Schemes);
 
-                IAuthenticationHandler handler = await provider.GetHandlerAsync(
+                IAuthenticationHandler? handler = await provider.GetHandlerAsync(
                     httpContext, IdentityConstants.ApplicationScheme);
 
                 handler = await provider.GetHandlerAsync(
@@ -131,24 +137,39 @@ namespace Security.WebAppLib.Example
             }
         }
 
-        public async Task ExploreAuthenticationSchemeProvider(IAuthenticationSchemeProvider schemes)
+        public record DefaultSchemeNames(
+            string? SignInScheme, 
+            string? SignOutScheme, 
+            string? ChallengeScheme, 
+            string? ForbidScheme, 
+            string? AuthenticateScheme);
+
+        public async Task<DefaultSchemeNames?> ExploreAuthenticationSchemeProvider(IAuthenticationSchemeProvider schemes)
         {
+            DefaultSchemeNames? defaultSchemes = null;
+
             if (schemes is AuthenticationSchemeProvider schemeProvider)
             {
-                AuthenticationScheme signInScheme = 
+                AuthenticationScheme? signInScheme = 
                     await schemeProvider.GetDefaultSignInSchemeAsync();
 
-                AuthenticationScheme signOutScheme = 
+                AuthenticationScheme? signOutScheme = 
                     await schemeProvider.GetDefaultSignOutSchemeAsync();
 
-                AuthenticationScheme challengeScheme = 
+                AuthenticationScheme? challengeScheme = 
                     await schemeProvider.GetDefaultChallengeSchemeAsync();
 
-                AuthenticationScheme forbidScheme = 
+                AuthenticationScheme? forbidScheme = 
                     await schemeProvider.GetDefaultForbidSchemeAsync();
 
-                AuthenticationScheme authenticateScheme = 
+                AuthenticationScheme? authenticateScheme = 
                     await schemeProvider.GetDefaultAuthenticateSchemeAsync();
+
+                defaultSchemes = new(signInScheme?.Name, 
+                    signOutScheme?.Name, 
+                    challengeScheme?.Name, 
+                    forbidScheme?.Name, 
+                    authenticateScheme?.Name);
 
                 IEnumerable<AuthenticationScheme> allSchemes = 
                     await schemeProvider.GetAllSchemesAsync();
@@ -159,6 +180,8 @@ namespace Security.WebAppLib.Example
                     ExploreAuthenticationScheme(scheme);
                 }
             }
+
+            return defaultSchemes;
         }
 
         #endregion
@@ -209,19 +232,19 @@ namespace Security.WebAppLib.Example
             s = options.ReturnUrlParameter;
             CookieBuilder b = options.Cookie;
             ICookieManager cm = options.CookieManager;
-            IDataProtectionProvider dp = options.DataProtectionProvider;
+            IDataProtectionProvider? dp = options.DataProtectionProvider;
             CookieAuthenticationEvents ev = options.Events;
             TimeSpan ex = options.ExpireTimeSpan;
             PathString ps = options.LoginPath;
             ps = options.LogoutPath;
-            ITicketStore ts = options.SessionStore;
+            ITicketStore? ts = options.SessionStore;
             bool b2 = options.SlidingExpiration;
             ISecureDataFormat<AuthenticationTicket> f = options.TicketDataFormat;
         }
 
         #endregion
 
-        #region SignInManager
+        #region Explore SignInManager
 
         public void ExploreSignInManager()
         {
@@ -244,6 +267,21 @@ namespace Security.WebAppLib.Example
             IUserClaimsPrincipalFactory<IMyUser> claimFact = _signInManager.ClaimsFactory;
         }
 
+        #endregion
+
+        #region Test SignIn
+
+        public DefaultSchemeNames? DefaultSchemes 
+        { 
+            get
+            {
+                if (field == null)
+                    field = ExploreAuthenticationSchemeProvider(_authenticationSchemeProvider).Result;
+                return field;
+            }
+            protected set; 
+        }
+
         public async Task SignInWithManager(IMyUser user)
         {
             try { await _signInManager.SignInAsync(user, true); }
@@ -262,8 +300,10 @@ namespace Security.WebAppLib.Example
             if (GetHttpContext(_signInManager) is HttpContext httpContext)
             {
                 try 
-                { 
-                    await httpContext.SignInAsync(IdentityConstants.ApplicationScheme, u); 
+                {
+                    string signInScheme = DefaultSchemes?.SignInScheme ?? IdentityConstants.ApplicationScheme;
+                    await httpContext.SignInAsync(signInScheme, u);
+                    ValidateSignIn(signInScheme, httpContext.Response);
                 }
                 catch (Exception ex)
                 {
@@ -324,6 +364,25 @@ namespace Security.WebAppLib.Example
         public async Task SignOut()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public void ValidateSignIn(string signInScheme, HttpResponse response)
+        {
+            SetCookieHeaderValue? authCookie = ExploreAuthCookies(response);
+            if (authCookie != null)
+            {
+                AuthenticationTicket? ticket =
+                    ParseAuthCookie(signInScheme, authCookie.Value.ToString());
+                if (ticket != null)
+                    ExploreAuthenticationTicket(ticket);
+            }
+        }
+
+        public AuthenticationTicket? ParseAuthCookie(string scheme, string cookieValue)
+        {
+            CookieAuthenticationOptions options = _cookieOptions.Get(scheme);
+            AuthenticationTicket? ticket = options.TicketDataFormat.Unprotect(cookieValue);
+            return ticket;
         }
 
         #endregion
@@ -393,6 +452,63 @@ namespace Security.WebAppLib.Example
             {
 
             }
+        }
+
+        public SetCookieHeaderValue? ExploreAuthCookies(HttpResponse response)
+        {
+            SetCookieHeaderValue? authCookie = null;
+            if (response.Headers.TryGetValue(HeaderNames.SetCookie, out StringValues vals))
+            {
+                foreach (string? val in vals)
+                {
+                    if (SetCookieHeaderValue.TryParse(val, out SetCookieHeaderValue? cookieVal))
+                    {
+                        StringSegment s = cookieVal.Domain;
+                        DateTimeOffset? d = cookieVal.Expires;
+                        IList<StringSegment> e = cookieVal.Extensions;
+                        bool b = cookieVal.HttpOnly;
+                        TimeSpan? t = cookieVal.MaxAge;
+                        s = cookieVal.Name;
+                        s = cookieVal.Path;
+                        var m = cookieVal.SameSite;
+                        b = cookieVal.Secure;
+                        s = cookieVal.Value;
+
+                        if (cookieVal.Name == AuthCookieName)
+                        {
+                            authCookie = cookieVal;
+                        }
+                    }
+                }
+            }
+            return authCookie;
+        }
+
+        public string? ExploreAuthCookies(HttpRequest request)
+        {
+            string? authCookie = null;
+            foreach (KeyValuePair<string, string> cookie in request.Cookies)
+            {
+                string name = cookie.Key;
+                string value = cookie.Value;
+                if (name == AuthCookieName)
+                {
+                    authCookie = $"{name}={value}";
+                }
+            }
+            return authCookie;
+        }
+
+        public void ExploreAuthenticationTicket(AuthenticationTicket ticket)
+        {
+            ClaimsPrincipal principal = ticket.Principal;
+            AuthenticationProperties properties = ticket.Properties;
+            DateTimeOffset? issuedUtc = properties.IssuedUtc;
+            DateTimeOffset? expiresUtc = properties.ExpiresUtc;
+            bool? allowRefresh = properties.AllowRefresh;
+            string? redirectUri = properties.RedirectUri;
+            IDictionary<string, string?> items = properties.Items;
+            IList<string> list = properties.Parameters.Keys.ToList();
         }
 
         #endregion
