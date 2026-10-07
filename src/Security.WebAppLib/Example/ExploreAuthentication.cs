@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Security.Identity.IdentityCore;
+using Security.WebAppLib.IdentityCore;
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace Security.Identity.Example
+namespace Security.WebAppLib.Example
 {
     public class ExploreAuthentication
     {

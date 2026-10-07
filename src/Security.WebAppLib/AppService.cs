@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Security.Identity.Example;
-using Security.Identity.IdentityCore;
+using Security.WebAppLib.Example;
+using Security.WebAppLib.IdentityCore;
 
-namespace Security.Identity
+namespace Security.WebAppLib
 {
     public class AppService
     {

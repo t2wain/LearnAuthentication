@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.StaticAssets;
-using Security.Identity;
 using Security.WebApp.Components;
+using Security.WebAppLib;
 
 namespace Security.WebApp
 {

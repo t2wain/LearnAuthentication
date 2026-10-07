@@ -26,6 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Security.Identity\Security.Identity.csproj" />
+    <ProjectReference Include="..\Security.WebAppLib\Security.WebAppLib.csproj" />
   </ItemGroup>
 </Project>

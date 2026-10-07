@@ -13,6 +13,21 @@
 			- Microsoft.AspNetCore.Http
 			- Microsoft.AspNetCore.Http.Extensions
 
+
+# Assembly : Microsoft.AspNetCore.DataProtection
+
+## Microsoft.AspNetCore.DataProtection
+
+- DataProtectionOptions
+	- DataProtectionOptions()
+	- ApplicationDiscriminator : string
+
+## Microsoft.Extensions.DependencyInjection
+
+- DataProtectionServiceCollectionExtensions
+	- AddDataProtection()
+	- **AddDataProtection**(Action\<DataProtectionOptions> configure)
+
 # Assembly : Microsoft.AspNetCore.Authentication.Cookies
 
 ## Microsoft.Extensions.DependencyInjection
@@ -234,7 +249,7 @@ AuthenticationBuilder authBuilder = services
 	- Services : IServiceCollection
 - **AuthenticationHandler\<TOptions>** (abstract) : **IAuthenticationHandler**
 	- where TOptions : AuthenticationSchemeOptions
-	- AuthenticateAsync() : Task\<AuthenticateResult>
+	- **AuthenticateAsync**() : Task\<AuthenticateResult>
 	- ChallengeAsync(AuthenticationProperties properties)) : Task
 	- ForbidAsync(AuthenticationProperties properties)) : Task
 	- InitializeAsync(AuthenticationScheme scheme, HttpContext context) : Task
@@ -431,6 +446,9 @@ AuthenticationBuilder authBuilder = services
 	- Unprotect(string protectedText) : TData
 	- Unprotect(string protectedText, string purpose) : TData
 - **SignInAuthenticationHandler\<TOptions>** (abstract)
+	- : IAuthenticationHandler
+	- : IAuthenticationSignInHandler
+	- : IAuthenticationSignOutHandler
 	- : **SignOutAuthenticationHandler\<TOptions>**
 	- SignInAuthenticationHandler(...)
 		- IOptionsMonitor\<TOptions> options, 
@@ -440,6 +458,8 @@ AuthenticationBuilder authBuilder = services
 	- HandleSignInAsync(ClaimsPrincipal user, AuthenticationProperties properties) : Task
 	- SignInAsync(ClaimsPrincipal user, AuthenticationProperties properties) : Task
 - **SignOutAuthenticationHandler\<TOptions>** (abstract)
+	- : IAuthenticationHandler
+	- : IAuthenticationSignOutHandler
 	- : **AuthenticationHandler\<TOptions>**
 	- SignOutAuthenticationHandler(...)
 		- IOptionsMonitor\<TOptions> options, 
@@ -672,7 +692,7 @@ AuthenticationBuilder authBuilder = services
 	- GetDefaultAuthenticateSchemeAsync() : Task\<AuthenticationScheme>
 	- GetDefaultChallengeSchemeAsync() : Task\<AuthenticationScheme>
 	- GetDefaultForbidSchemeAsync() : Task\<AuthenticationScheme>
-	- GetDefaultSignInSchemeAsync() : Task\<AuthenticationScheme>
+	- **GetDefaultSignInSchemeAsync**() : Task\<AuthenticationScheme>
 	- GetDefaultSignOutSchemeAsync() : Task\<AuthenticationScheme>
 	- GetRequestHandlerSchemesAsync() : Task<IEnumerable\<AuthenticationScheme>>
 	- GetSchemeAsync(string name) : Task\<AuthenticationScheme>
@@ -682,15 +702,15 @@ AuthenticationBuilder authBuilder = services
 		- IAuthenticationSchemeProvider schemes, 
 		- IAuthenticationHandlerProvider handlers, 
 		- IClaimsTransformation transform
-	- AuthenticateAsync(HttpContext context, string scheme) : Task\<AuthenticateResult>
-	- ChallengeAsync(HttpContext context, string scheme, AuthenticationProperties properties) : Task
-	- ForbidAsync(HttpContext context, string scheme, AuthenticationProperties properties) : Task
-	- SignInAsync(...) : Task
+	- **AuthenticateAsync**(HttpContext context, string scheme) : Task\<AuthenticateResult>
+	- **ChallengeAsync**(HttpContext context, string scheme, AuthenticationProperties properties) : Task
+	- **ForbidAsync**(HttpContext context, string scheme, AuthenticationProperties properties) : Task
+	- **SignInAsync**(...) : Task
 		- HttpContext context, 
 		- string scheme, 
 		- ClaimsPrincipal principal, 
 		- AuthenticationProperties properties
-	- SignOutAsync(HttpContext context, string scheme, AuthenticationProperties properties) : Task
+	- **SignOutAsync**(HttpContext context, string scheme, AuthenticationProperties properties) : Task
 	- Handlers : **IAuthenticationHandlerProvider**
 	- Schemes : **IAuthenticationSchemeProvider**
 	- Transform : **IClaimsTransformation**

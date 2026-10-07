@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Security.Identity;
-using Security.Identity.Example;
+using Security.WebAppLib;
+using Security.WebAppLib.Example;
 using System.Security.Claims;
 using System.Security.Principal;
 
