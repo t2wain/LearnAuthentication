@@ -31,7 +31,7 @@ namespace Security.WebAppLib
             _services.AddScoped<MyRoleStore>();
             _services.AddScoped<IRoleStore<IMyRole>, MyRoleStore>();
 
-            _services.AddDataProtection();
+            //_services.AddDataProtection();
 
             // Identity services with authentication
             IdentityBuilder b1 = _services

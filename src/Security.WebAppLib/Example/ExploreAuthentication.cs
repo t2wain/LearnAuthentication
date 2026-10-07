@@ -62,7 +62,7 @@ namespace Security.WebAppLib.Example
                     await ExploreAuthenticationService();
                     break;
                 case 4:
-                    var identity = CreateIdentity();
+                    var identity = CreateIdentity(IdentityConstants.ApplicationScheme);
                     await SignInWithHttpContext(identity);
                     break;
             }
@@ -297,11 +297,16 @@ namespace Security.WebAppLib.Example
             var u = new ClaimsPrincipal(identity);
             if (_authenticationService is AuthenticationService authService)
             {
-                AuthenticationScheme signInScheme = 
+                AuthenticationScheme? signInScheme = 
                     await authService.Schemes.GetDefaultSignInSchemeAsync();
-                string n = signInScheme.Name;
 
-                object? o = _provider.GetService(signInScheme.HandlerType);
+                object? o = null;
+                if (signInScheme != null && signInScheme.HandlerType != null)
+                {
+                    o = _provider.GetService(signInScheme.HandlerType);
+                    string n = signInScheme.Name;
+                }
+
                 if (o is CookieAuthenticationHandler cookieHandler)
                 {
                     try
@@ -339,12 +344,11 @@ namespace Security.WebAppLib.Example
                 string? name = identity.Name;
                 string? scheme = identity.AuthenticationType;
             }
-
         }
 
         public void ExploreAuthenticationScheme(AuthenticationScheme scheme)
         {
-            string n = scheme.DisplayName;
+            string? n = scheme.DisplayName;
             string n1 = scheme.Name;
             string t = scheme.HandlerType.Name;
             object? o = _provider.GetService(scheme.HandlerType);
