@@ -30,7 +30,7 @@ If **multiple schemes** are used, **authorization policies** (or **authorization
 
 In some cases, the call to AddAuthentication is automatically made by other extension methods. For example, when using ASP.NET Core Identity, **AddAuthentication is called internally**.
 
-The Authentication middleware is added in Program.cs by calling **UseAuthentication**. Calling UseAuthentication registers the **middleware that uses the previously registered authentication schemes**. Call UseAuthentication before any middleware that dependson users being authenticated.
+The Authentication middleware is added in Program.cs by calling **UseAuthentication**. Calling UseAuthentication registers the **middleware that uses the previously registered authentication schemes**. Call UseAuthentication before any middleware that depends on users being authenticated.
 
 ## Authentication concepts
 
@@ -46,7 +46,7 @@ When there is only a **single** authentication scheme registered, it becomes the
 
 #### DefaultScheme
 
-When there is only a **single** authentication scheme registered, the single authenticationscheme:
+When there is only a **single** authentication scheme registered, the single authentication scheme:
 
 - Is automatically used as the **DefaultScheme**
 - Eliminates the need to **specify** the DefaultScheme in AddAuthentication(IServiceCollection) or AddAuthenticationCore(IServiceCollection)
@@ -62,7 +62,7 @@ An authentication scheme is a **name** that **corresponds to**:
 - An authentication **handler**.
 - **Options** for configuring that specific instance of the handler.
 
-Schemes are useful as a mechanism for referring to the **authentication**, **challenge**, and **forbid behaviors** of the associated handler. For example, an **authorization policy** can use **scheme names** to specify which authentication scheme (or schemes) should be used **to authenticate the user**. When configuring authentication, it's common to specify the **default** authentication scheme. **The default scheme is used unless a resource requests aspecific scheme**. It's also possible to:
+Schemes are useful as a mechanism for referring to the **authentication**, **challenge**, and **forbid behaviors** of the associated handler. For example, an **authorization policy** can use **scheme names** to specify which authentication scheme (or schemes) should be used **to authenticate the user**. When configuring authentication, it's common to specify the **default** authentication scheme. **The default scheme is used unless a resource requests a specific scheme**. It's also possible to:
 
 - **Specify different default schemes to use for authenticate, challenge, and forbid actions**.
 - **Combine multiple schemes into one using policy schemes**.

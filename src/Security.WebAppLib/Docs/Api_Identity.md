@@ -9,6 +9,8 @@
 - Microsoft.Extensions.Identity.Stores
 	- Microsoft.Extensions.Identity.Core
 
+<div id="Claim"></div>
+
 # Assembly : System.Security.Claims
 
 ## System.Security.Claims

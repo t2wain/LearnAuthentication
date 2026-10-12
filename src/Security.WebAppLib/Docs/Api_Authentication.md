@@ -32,16 +32,16 @@
 
 ## Microsoft.Extensions.DependencyInjection
 
-Specify to store, encrypte, decrypt, and parse data for an authenticted user from an identity cookie. Identity cookie is set by calling **HttpContext.SignInAsync(...)**. Calling **HttpConntext.SignOutAsync(...)** removes the cookie. It also parses the cookie to rebuild the PrincipalClaim object for each subsequent request.
+Specify to store, encrypt, decrypt, and parse data for an authenticated user from an identity cookie. Identity cookie is set by calling **HttpContext.SignInAsync(...)**. Calling **HttpContext.SignOutAsync(...)** removes the cookie. It also parses the cookie to rebuild the PrincipalClaim object for each subsequent request.
 
-You can setup multipe identity cookies to store data from various identity providers. A separate **authentication scheme** label is used to reference each identity provider such as Google and Microsoft.
+You can setup multiple identity cookies to store data from various identity providers. A separate **authentication scheme** label is used to reference each identity provider such as Google and Microsoft.
 
-To use external identity provider for sign-in but switching to a different application specific authentication scheme, then folow these steps:
+To use external identity provider for sign-in but switching to a different application specific authentication scheme, then follow these steps:
 
-1. Specify the **return URL** parameter (AuthenticationProperties) for an external identity provider that provides the logic to reconstruct the PrincialClaim
+1. Specify the **return URL** parameter (AuthenticationProperties) for an external identity provider that provides the logic to reconstruct the ClaimsPrincipal
 1. Access the identity data from each identity cookie with **HttpContext.Authenticated(...)**.
 1. Construct a new application specific PrincipalClaim
-1. Use **HttpConntext.SignOutAsync(...)** to remove the identity cookie from external provider
+1. Use **HttpContext.SignOutAsync(...)** to remove the identity cookie from external provider
 1. Use **HttpContext.SignInAsync(...)** to issue application specific identity cookie.
 1. Be sure the **AddAuthentication()** is configured for the same application specific authentication scheme. 
 
@@ -163,10 +163,10 @@ There are multiple scheme actions:
 	- Configure how the ClaimPrincipal is reconstructed on every request.
 	- It can be configured to get the identity data from the identity cookie.
 1. **Challenge** scheme action
-	- Configure what happen when an un-authenticatd user try to access resource that requires authentication.
+	- Configure what happen when an un-authenticated user try to access resource that requires authentication.
 	- Typically, the cookie scheme is configured to redirect user to a login page. The login page can be a local webapp or an external identity provider.
 1. **Forbid** scheme action
-	- Configure what happen an authenticated user try to access a resource that he is not authourized to access.
+	- Configure what happen an authenticated user try to access a resource that he is not authorized to access.
 	- Typically, the cookie scheme will redirect user to an access-denied web page.
 
 ```csharp
@@ -178,7 +178,7 @@ AuthenticationBuilder authBuilder = services
         options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
         options.DefaultForbidScheme = IdentityConstants.ApplicationScheme;
 
-		// configure which cooike to use for constructing PrincipalClaim for each request.
+		// configure which cookie to use for constructing PrincipalClaim for each request.
 		options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
     })
 	// save identity data to cookie to reconstruct the ClaimPrincipal
@@ -219,7 +219,7 @@ AuthenticationBuilder authBuilder = services
 ## Microsoft.AspNetCore.Builder
 
 - AuthAppBuilderExtensions (IApplicationBuilder)
-	- UseAuthentication()
+	- **UseAuthentication**()
 
 ## Microsoft.AspNetCore.Authentication
 
@@ -282,7 +282,13 @@ AuthenticationBuilder authBuilder = services
 	- Request : HttpRequest
 	- Response : HttpResponse
 	- UrlEncoder : UrlEncoder
-- AuthenticationMiddleware
+- **AuthenticationMiddleware**
+	- note : middelware added by app.UseAuthentication()
+	- AuthenticationMiddleware(...)
+		- RequestDelegate next, 
+		- IAuthenticationSchemeProvider schemes
+	- Invoke(HttpContext context) : Task
+	- Schemes : IAuthenticationSchemeProvider
 - **AuthenticationSchemeOptions**
 	- AuthenticationSchemeOptions()
 	- Validate()
@@ -506,7 +512,7 @@ AuthenticationBuilder authBuilder = services
 	- Fail(System.Exception failure, AuthenticationProperties properties)
 	- NoResult()
 	- Success(**AuthenticationTicket** ticket)
-	- Failure : Exeption
+	- Failure : Exception
 	- None : bool
 	- Principal : **ClaimsPrincipal**
 	- Properties : **AuthenticationProperties**
@@ -566,7 +572,7 @@ AuthenticationBuilder authBuilder = services
 	- **Items** : IDictionary\<string, string>
 	- **Parameters** : IDictionary\<string, object>
 	- **RedirectUri** : string
-- AuthenticationScheme
+- **AuthenticationScheme**
 	- AuthenticationScheme(...)
 		- string name, 
 		- string displayName, 
@@ -621,11 +627,11 @@ AuthenticationBuilder authBuilder = services
 	- AuthenticateAsync() : Task\<AuthenticateResult>
 	- ChallengeAsync() : Task\<AuthenticationProperties>
 	- ForbidAsync(AuthenticationProperties properties) : Task
-	- InitializeAsync(AuthenticationScheme sheme, HttpContext context) : Task
+	- InitializeAsync(AuthenticationScheme scheme, HttpContext context) : Task
 - **IAuthenticationHandlerProvider**
 	- GetHandlerAsync(...) : Task\<IAuthenticationHandler>
 		- HttpContext context
-		- string authenticationSheme
+		- string authenticationScheme
 - **IAuthenticationRequestHandler**
 	- HandleRequestAsync() : Task\<bool>
 - **IAuthenticationSchemeProvider**

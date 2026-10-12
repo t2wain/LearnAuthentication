@@ -28,11 +28,14 @@ namespace Security.ConsoleApp
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder([]);
 
+            // Configures and registers services for ASP.NET Core Identity, 
+            // authentication, and authorization.
             AppService appService = new(builder.Services, builder.Configuration);
             appService.AddMyIdentity();
+            appService.AddMyAuthentication();
             appService.AddMyAuthorization();
-            appService.AddMyOtherServices();
-            appService.AddTestHttpContextAccessor();
+            appService.AddMyExamples();
+            appService.AddMyHttpContextAccessor();
 
             IHost app = builder.Build();
 

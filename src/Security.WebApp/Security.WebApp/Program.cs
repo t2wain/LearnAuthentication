@@ -17,7 +17,7 @@ namespace Security.WebApp
 
             AppService appService = new(builder.Services, builder.Configuration);
             appService.AddMyIdentity();
-            appService.AddMyOtherServices();
+            appService.AddMyExamples();
             appService.AddMyAuthorization();
 
             WebApplication? app = builder.Build();

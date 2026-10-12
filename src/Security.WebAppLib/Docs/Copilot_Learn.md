@@ -1607,3 +1607,278 @@ RememberTwoFactorClientAsync();
 ```
 
 Those four methods directly correspond to the four cookie schemes and make the overall Identity flow much easier to follow.
+
+# ClaimsIdentity and Configured AuthenticationScheme
+
+> In APS.NET Core athentication framework, does each ClaimsIdentity associated with a configured AuthenticationScheme?
+
+Not necessarily.
+
+In ASP.NET Core, a ClaimsIdentity has an **AuthenticationType** property, but that is not the same thing as being intrinsically associated with an ASP.NET Core **AuthenticationScheme**.
+
+## Relationship between the concepts
+
+**AuthenticationScheme**
+- Configured in AddAuthentication()
+- Represents a handler (Cookies, JWT Bearer, OpenID Connect, etc.)
+
+Examples:
+
+```csharp
+services.AddAuthentication()
+    .AddCookie("Cookies")
+    .AddJwtBearer("Bearer");
+```
+
+**ClaimsIdentity**
+- Contains claims and identity information.
+- Has properties like
+    - identity.Name
+    - identity.Claims
+    - **identity.AuthenticationType**
+
+**ClaimsPrincipal**
+- Can contain multiple ClaimsIdentity instances.
+- ASP.NET Core sets HttpContext.User to a ClaimsPrincipal.
+
+## What happens during authentication?
+
+When an **authentication handler** successfully authenticates a request, it returns an AuthenticationTicket:
+
+```csharp
+return AuthenticateResult.Success(
+    new AuthenticationTicket(
+        principal,
+        scheme.Name));
+```
+
+The ticket explicitly records the **scheme name** that authenticated the request.
+
+The identities inside the ClaimsPrincipal may have:
+
+```csharp
+new ClaimsIdentity(claims, "Bearer");
+```
+but that's just the **AuthenticationType**. **It is conventional to make it match the scheme name, yet ASP.NET Core does not require that.**
+
+For example:
+
+```csharp
+var identity = new ClaimsIdentity(
+    claims,
+    authenticationType: "CustomIdentityType");
+
+var principal = new ClaimsPrincipal(identity);
+
+return AuthenticateResult.Success(
+    new AuthenticationTicket(
+        principal,
+        "Bearer"));
+```
+
+Here:
+
+- Authentication Scheme = "Bearer"
+- Identity.AuthenticationType = "CustomIdentityType"
+
+These are different values and ASP.NET Core treats them separately.
+
+## Multiple identities
+
+A principal can contain identities that originated from different schemes:
+
+```csharp
+var principal = new ClaimsPrincipal(
+    cookieIdentity,
+    jwtIdentity);
+```
+
+In this case:
+
+```charp
+principal.Identities
+```
+
+contains multiple ClaimsIdentity objects, **each potentially having a different AuthenticationType**.
+
+How to determine which scheme authenticated?
+
+Use:
+
+```csharp
+var result = await HttpContext.AuthenticateAsync("Bearer");
+```
+
+or inspect the authentication ticket, because the scheme is tracked by the authentication system, not by a guaranteed one-to-one relationship on ClaimsIdentity.
+
+## Rule of thumb
+
+- AuthenticationScheme belongs to the ASP.NET Core authentication infrastructure.
+- ClaimsIdentity.AuthenticationType belongs to the identity object itself.
+- They are often set to the same value, but there is no enforced one-to-one association between a ClaimsIdentity and an authentication scheme. A ClaimsPrincipal can contain multiple identities, and an authentication ticket records the scheme that produced the principal.
+
+# Setting the HttpContext.User
+
+> Which logic in which class set the HttpContext.User during the authentication process? Is the authentication handler does that?
+
+The short answer is the authentication handler does not directly set HttpContext.User.
+
+## The flow
+
+When you call during the app configuration:
+
+```csharp
+app.UseAuthentication();
+```
+
+ASP.NET Core adds the AuthenticationMiddleware into the pipeline.
+
+**The middleware's Invoke() method is responsible for populating HttpContext.User.**
+
+Simplified flow:
+
+1. AuthenticationMiddleware
+1. -> context.AuthenticateAsync(defaultScheme)
+1. -> AuthenticationHandler
+1. -> AuthenticateResult
+1. -> AuthenticationTicket
+1. -> principal returned to middleware
+1. -> context.User = principal
+
+## Where exactly is HttpContext.User assigned?
+
+In AuthenticationMiddleware.
+
+The relevant logic is effectively:
+
+```csharp
+var result = await context.AuthenticateAsync(defaultScheme);
+
+if (result?.Principal != null)
+{
+    context.User = result.Principal;
+}
+```
+
+So:
+
+1. AuthenticationMiddleware asks the default authentication scheme to authenticate.
+1. The scheme's handler executes.
+1. The handler returns an AuthenticateResult.
+1. The middleware extracts the ClaimsPrincipal.
+1. The middleware assigns:
+
+```csharp
+HttpContext.User = result.Principal;
+```
+
+## What does the AuthenticationHandler do?
+
+A handler such as:
+
+1. CookieAuthenticationHandler
+1. JwtBearerHandler
+1. OpenIdConnectHandler
+
+implements:
+
+```csharp
+HandleAuthenticateAsync()
+```
+
+and returns:
+
+```csharp
+AuthenticateResult.Success(
+    new AuthenticationTicket(
+        principal,
+        Scheme.Name));
+```
+
+For example:
+
+```csharp
+protected override async Task<AuthenticateResult>
+    HandleAuthenticateAsync()
+{
+    var principal = BuildPrincipal();
+
+    return AuthenticateResult.Success(
+        new AuthenticationTicket(
+            principal,
+            Scheme.Name));
+}
+```
+
+Notice the handler creates and returns the principal, but does **not** assign it to HttpContext.User.
+
+## What about multiple schemes?
+
+Suppose you configure:
+
+```csharp
+.AddCookie("Cookies")
+.AddJwtBearer("Bearer");
+```
+
+and the default scheme is:
+
+```csharp
+options.DefaultAuthenticateScheme = "Cookies";
+```
+
+Then **UseAuthentication()** only calls:
+
+```csharp
+AuthenticateAsync("Cookies")
+```
+
+and puts that principal into:
+
+```csharp
+HttpContext.User
+```
+
+The "Bearer" handler is not invoked unless:
+
+- Authorization requests it
+- You explicitly call
+
+```csharp
+await HttpContext.AuthenticateAsync("Bearer");
+```
+
+## Why can HttpContext.User change later?
+
+The **PolicyEvaluator** used by authorization can authenticate additional schemes specified by an authorization policy:
+
+```csharp
+[Authorize(AuthenticationSchemes = "Bearer")]
+```
+
+or
+
+```csharp
+policy.AuthenticationSchemes.Add("Bearer");
+```
+In that case authorization may call:
+
+```csharp
+AuthenticateAsync("Bearer")
+```
+
+and replace/merge the current HttpContext.User.
+
+This is why you might see a different principal during authorization than the one originally set by UseAuthentication().
+
+## Key classes involved
+
+| Responsibility | Class |
+| -------------- | ----- |
+| Populates HttpContext.User | AuthenticationMiddleware |
+| Dispatches to handlers | AuthenticationService |
+| Produces ClaimsPrincipal | AuthenticationHandler\<TOptions> |
+| Contains principal + scheme | AuthenticationTicket |
+| Stores identities | ClaimsPrincipal / ClaimsIdentity |
+
+So the precise answer is: AuthenticationMiddleware sets HttpContext.User. Authentication handlers only authenticate and return an AuthenticationTicket containing a ClaimsPrincipal; they do not directly update HttpContext.User.
