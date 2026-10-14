@@ -225,7 +225,7 @@ IdentityBuilder identityBuilder = services
 	- Code : string
 	- Description : string
 - IdentityErrorDescriber
-	- dentityErrorDescriber()
+	- IdentityErrorDescriber()
 	- ConcurrencyFailure() : IdentityError
 	- DefaultError() : IdentityError
 	- DuplicateEmail(string email)

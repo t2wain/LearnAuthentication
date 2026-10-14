@@ -32,12 +32,27 @@ namespace Security.WebAppLib.Example
         }
 
         #endregion
+        
+        public async Task Run(int testNo = 0)
+        {
+            int? o = 0;
+            var t = o ?? testNo;
+            switch (t)
+            {
+                case 0:
+                    await ExploreProvider();
+                    break;
+            }
+        }
 
-        public async Task ExploreAuthoriztion()
+
+        public async Task ExploreProvider()
         {
             AuthorizationPolicy p = await _policyProvider.GetDefaultPolicyAsync();
             AuthorizationPolicy? p2 = await _policyProvider.GetFallbackPolicyAsync();
             bool b = _policyProvider.AllowsCachingPolicies;
+
+            p2 = await _policyProvider.GetPolicyAsync("policy1");
         }
     }
 }

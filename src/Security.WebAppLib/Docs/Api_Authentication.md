@@ -590,7 +590,7 @@ AuthenticationBuilder authBuilder = services
 	- AuthenticationTicket(...)
 		- **ClaimsPrincipal** principal,
 		- **AuthenticationProperties** properties, 
-		- string authenticationScheme
+		- string **authenticationScheme**
 	- AuthenticationTicket(...)
 		- ClaimsPrincipal principal,
 		- string authenticationScheme

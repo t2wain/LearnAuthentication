@@ -19,7 +19,7 @@
 	- AddFallbackPolicy(string name, AuthorizationPolicy policy)
 	- **AddFallbackPolicy**(string name, Action\<AuthorizationPolicyBuilder> configurePolicy)
 	- AddPolicy(string name, AuthorizationPolicy policy)
-	- **AddPolicy**(string name, Action\<**AuthorizationPolicyBuilder**> configurePolicy
+	- **AddPolicy**(string name, Action\<**AuthorizationPolicyBuilder**> configurePolicy)
 	- SetDefaultPolicy(AuthorizationPolicy policy)
 	- SetFallbackPolicy(AuthorizationPolicy policy)
 	- SetInvokeHandlersAfterFailure(bool invoke)
@@ -217,3 +217,101 @@
 	- : IAuthorizationRequirement
 	- **RolesAuthorizationRequirement(IEnumerable\<string> allowedRoles)**
 	- AllowedRoles : IEnumerable\<string>
+
+
+# Assembly : Microsoft.AspNetCore.Authorization.Policy
+
+## Microsoft.AspNetCore.Authorization
+
+- AuthorizationMiddleware
+	- AuthorizationMiddleware(...)
+		- RequestDelegate next, 
+		- IAuthorizationPolicyProvider policyProvider)
+	- AuthorizationMiddleware(...)
+		- RequestDelegate next, 
+		- IAuthorizationPolicyProvider policyProvider, 
+		- IServiceProvider services
+	- AuthorizationMiddleware(...)
+		- RequestDelegate next, 
+		- IAuthorizationPolicyProvider policyProvider, 
+		- IServiceProvider services,
+		- ILogger\<AuthorizationMiddleware> logger
+	- Invoke(HttpContext context) : Task
+- IAuthorizationMiddlewareResultHandler
+	- HandleAsync(...) : Task
+		- RequestDelegate next, 
+		- HttpContext context, 
+		- AuthorizationPolicy policy, 
+		- PolicyAuthorizationResult authorizeResult
+
+## Microsoft.AspNetCore.Authorization.Policy
+
+- AuthorizationMiddlewareResultHandler
+	- : IAuthorizationMiddlewareResultHandler
+	- AuthorizationMiddlewareResultHandler()
+	- HandleAsync(...) : Task
+		- RequestDelegate next, 
+		- HttpContext context, 
+		- AuthorizationPolicy policy, 
+		- PolicyAuthorizationResult authorizeResult
+- IPolicyEvaluator
+	- AuthenticateAsync(...) : Task\<AuthenticateResult>
+		- AuthorizationPolicy policy, 
+		- HttpContext context
+	- AuthorizeAsync(...) : Task\<PolicyAuthorizationResult> 
+		- AuthorizationPolicy policy, 
+		- AuthenticateResult authenticationResult, 
+		- HttpContext context, 
+		- object resource
+- PolicyAuthorizationResult
+	- Challenge() : PolicyAuthorizationResult 
+	- Forbid() : PolicyAuthorizationResult 
+	- Forbid(AuthorizationFailure authorizationFailure) : PolicyAuthorizationResult
+	- Success() : PolicyAuthorizationResult
+	- AuthorizationFailure : AuthorizationFailure 
+	- Challenged : bool
+	- Forbidden : bool
+	- Succeeded : bool
+- PolicyEvaluator
+	- : IPolicyEvaluator
+	- PolicyEvaluator(IAuthorizationService authorization)
+	- AuthenticateAsync(...) : Task\<AuthenticateResult>
+		- AuthorizationPolicy policy, 
+		- HttpContext context
+	- AuthorizeAsync(...) : Task\<PolicyAuthorizationResult> 
+		- AuthorizationPolicy policy, 
+		- AuthenticateResult authenticationResult, 
+		- HttpContext context, 
+		- object resource
+
+## Microsoft.AspNetCore.Builder
+
+- AuthorizationAppBuilderExtensions
+	- UseAuthorization(this IApplicationBuilder app)
+- AuthorizationEndpointConventionBuilderExtensions (TBuilder)
+	- where TBuilder : IEndpointConventionBuilder
+	- AllowAnonymous\<TBuilder>()
+	- RequireAuthorization\<TBuilder>()
+	- RequireAuthorization\<TBuilder>(AuthorizationPolicy policy)
+	- RequireAuthorization\<TBuilder>(params IAuthorizeData[] authorizeData)
+	- RequireAuthorization\<TBuilder>(params string[] policyNames)
+	- RequireAuthorization\<TBuilder>(...)
+		- System.Action\<AuthorizationPolicyBuilder> configurePolicy
+
+## Microsoft.Extensions.DependencyInjection
+
+- PolicyServiceCollectionExtensions (IServiceCollection)
+	- AddAuthorization()
+	- AddAuthorization(AuthorizationOptions> configure)
+	- AddAuthorizationBuilder() : AuthorizationBuilder 
+	- AddAuthorizationPolicyEvaluator()
+
+
+
+
+
+
+
+
+
+ 

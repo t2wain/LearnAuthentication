@@ -30,7 +30,11 @@ The UserManager and SignInManager classes provide the core logic of Sign-In and 
 
 ## Multiple Identities
 
-A ClaimsPrincipal can have one or more ClaimsIdentities. Each ClaimsIdentity contains user information provided by a specific provider (ClaimsIdentity.AuthenticationType) such as your own application, Google, or Microsoft. A ClaimsIdentity without a provider information (AuthenticationType) is considered as unauthenticated anonymous user.
+A ClaimsPrincipal can have one or more ClaimsIdentities. Each ClaimsIdentity contains user information provided by a specific identity provider (ClaimsIdentity.AuthenticationType) such as your own application, Google, or Microsoft. A ClaimsIdentity without a provider information (AuthenticationType) is considered as unauthenticated anonymous user.
+
+## Claim
+
+Claims are any information about users provided and verified by various identity providers (OriginalIssuer). ClaimTypes enum specifies various standard claim types. The IClaimsTransformation converts various claim types to application-specific claim types.
 
 # Authentication Layer
 
@@ -90,8 +94,45 @@ Other service classes are registered with DI container to be available for use:
 
 - AuthenticationService : IAuthenticationService
 - AuthenticationSchemeProvider : IAuthenticationSchemeProvider
-- IOptionsMonitor\<CookieAuthenticationOptions>
 
 # Authorization
 
+Authorization is about restricting Access to resources based on information (Claim) stored within the current user (ClaimsPrincipal). 
 
+To manage access declaratively
+
+- AuthorizeAttribute 
+- AllowAnonymousAttribute .
+
+To manage access dynamically, use
+
+- properties, methods, and extension methods of the ClaimsPrincipal.
+- DefaultAuthorizationService : IAuthorizationService (from DI container)
+
+## Authorization Policy
+
+Access management can be organized into various AuthorizationPolicy. An application can create a collection of AuthorizationPolicy to specify access criteria.
+
+A policy (AuthorizationPolicyBuilder) can specify
+- requirement for a certain set of claims
+- complex logic based on claims and/or about access to specific resources
+	- IAuthorizationRequirement and 
+	- AuthorizationHandler<TRequirement, TResource> : IAuthorizationHandler
+- dynamic logic using assertion (RequireAssertion) 
+
+## Authorization Requirement
+
+IAuthorizationRequirement is a marker interface that represent certain criteria and/or threshold. An application can create a collection of custom AuthorizationRequirement. A policy can specify these requirements to be evaluated. 
+
+Create a custom class based on IAuthorizationRequirement and AuthorizeAttribute to accept additional parameters needed for the evaluation.
+
+IAuthorizationHandler implements the custom logic to evaluate the user identity information against a specific IAuthorizationRequirement. IAuthorizationHandler is registered with the DI container to make it available to be called by the authorization framework.
+
+.NET provide a set of AuthorizationRequirement classes with semantic meaning (Microsoft.AspNetCore.Authorization.Infrastructure). 
+
+## Services
+
+The following service classes are registered with the DI container for use in application:
+
+- DefaultAuthorizationService : IAuthorizationService
+- DefaultAuthorizationPolicyProvider : IAuthorizationPolicyProvider

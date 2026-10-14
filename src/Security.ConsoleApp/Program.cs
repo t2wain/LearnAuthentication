@@ -14,7 +14,8 @@ namespace Security.ConsoleApp
             //WinSecurity();
             IHost host = CreateHost();
             CreateEx(host);
-            RunEx1(host);
+            //RunEx1(host);
+            RunEx2(host);
         }
 
         public static void CreateEx(IHost host)
@@ -33,9 +34,11 @@ namespace Security.ConsoleApp
             AppService appService = new(builder.Services, builder.Configuration);
             appService.AddMyIdentity();
             appService.AddMyAuthentication();
-            appService.AddMyAuthorization();
+            //appService.AddMyAuthorization();
+            PolicyExample.ConfigureAuthorization(builder.Services, builder.Configuration);
             appService.AddMyExamples();
             appService.AddMyHttpContextAccessor();
+
 
             IHost app = builder.Build();
 
@@ -48,8 +51,15 @@ namespace Security.ConsoleApp
             ex.Run().Wait();
         }
 
+        public static void RunEx2(IHost host)
+        {
+            var ex = host.Services.GetRequiredService<ExploreAuthorization>();
+            ex.Run().Wait();
+        }
 
-        #pragma warning disable CA1416
+
+
+#pragma warning disable CA1416
         public static void WinSecurity()
         {
             WindowsIdentity identity = WindowsIdentity.GetCurrent();

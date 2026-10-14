@@ -74,7 +74,7 @@ namespace Security.WebAppLib
 
         public virtual void AddMyAuthorization()
         {
-            _services.AddAuthorizationCore((AuthorizationOptions configure) =>
+            _services.AddAuthorization((AuthorizationOptions configure) =>
             {
                 _config.Bind("AuthorizationOptions", configure);
             });
