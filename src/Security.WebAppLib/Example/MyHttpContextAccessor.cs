@@ -1,5 +1,8 @@
 ﻿namespace Security.WebAppLib.Example
 {
+    /// <summary>
+    /// Provide an HttpContext for testing
+    /// </summary>
     public class MyHttpContextAccessor : IHttpContextAccessor
     {
         IServiceProvider _provider;

@@ -35,7 +35,7 @@ namespace Security.ConsoleApp
             appService.AddMyIdentity();
             appService.AddMyAuthentication();
             //appService.AddMyAuthorization();
-            PolicyExample.ConfigureAuthorization(builder.Services, builder.Configuration);
+            AuthorizationService.ConfigureAuthorization(builder.Services, builder.Configuration);
             appService.AddMyExamples();
             appService.AddMyHttpContextAccessor();
 

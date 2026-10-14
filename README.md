@@ -136,3 +136,41 @@ The following service classes are registered with the DI container for use in ap
 
 - DefaultAuthorizationService : IAuthorizationService
 - DefaultAuthorizationPolicyProvider : IAuthorizationPolicyProvider
+
+# Examples
+
+The following classes provide examples about these 3 layers:
+
+- Security.ConsoleApp
+	- [Program.cs](./src/Security.ConsoleApp/Program.cs)
+- Security.WebAppLib
+	- [AppService.cs](./src/Security.WebAppLib/AppService.cs)
+- Security.WebAppLib.Example
+	- [ExploreIdentity.cs](./src/Security.WebAppLib/Example/ExploreIdentity.cs)
+	- [ExploreAuthentication.cs](./src/Security.WebAppLib/Example/ExploreAuthentication.cs)
+	- [AuthorizationService.cs](./src/Security.WebAppLib/Example/AuthorizationService.cs)
+	- [ExploreAuthorization.cs](./src/Security.WebAppLib/Example/ExploreAuthorization.cs)
+
+# Additional Documents
+
+**.NET Library API**
+
+- Security.WebAppLib
+	- [Api_Identity.md](./src/Security.WebAppLib/Docs/Api_Identity.md)
+	- [Api_Authentication.md](./src/Security.WebAppLib/Docs/Api_Authentication.md)
+	- [Api_Authorization.md](./src/Security.WebAppLib/Docs/Api_Authorization.md)
+	- [Api_Web.md](./src/Security.WebAppLib/Docs/Api_Web.md)
+
+**MSDN Articles**
+
+- Security.WebAppLib
+	- [Doc_Identity.md](./src/Security.WebAppLib/Docs/Doc_Identity.md)
+	- [Doc_Authentication.md](./src/Security.WebAppLib/Docs/Doc_Authentication.md)
+	- [Doc_Authorization.md](./src/Security.WebAppLib/Docs/Doc_Authorization.md)
+	- [Doc_Passkey.md](./src/Security.WebAppLib/Docs/Doc_Passkey.md)
+
+**Copilot Explanation**
+
+- Security.WebAppLib
+	- [Copilot_Prompt.md](./src/Security.WebAppLib/Docs/Copilot_Prompt.md)
+	- [Copilot_Learn.md](./src/Security.WebAppLib/Docs/Copilot_Learn.md)

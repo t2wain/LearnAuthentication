@@ -27,6 +27,9 @@ namespace Security.WebAppLib.Example
         public readonly string AuthCookieName = 
             $"{CookieAuthenticationDefaults.CookiePrefix}{IdentityConstants.ApplicationScheme}";
 
+        /// <summary>
+        /// Services available from DI container
+        /// </summary>
         public ExploreAuthentication(
             IServiceProvider provider,
             IAuthenticationService authenticationService,
@@ -75,9 +78,13 @@ namespace Security.WebAppLib.Example
 
         #region ExploreAuthenticationSchemes
 
+        /// <summary>
+        /// List all the registered authentication shemes
+        /// </summary>
         public async Task ExploreAuthenticationSchemes()
         {
-            // default configred authentication shemes
+            // default configured authentication shemes
+            // when adding the Identity framework
             string s = IdentityConstants.ApplicationScheme;
             s = IdentityConstants.ExternalScheme;
             s = IdentityConstants.TwoFactorUserIdScheme;
@@ -123,6 +130,8 @@ namespace Security.WebAppLib.Example
             {
                 await ExploreAuthenticationSchemeProvider(provider.Schemes);
 
+                // authentication logic is implemented by a specific handler
+                // for each authentication scheme
                 IAuthenticationHandler? handler = await provider.GetHandlerAsync(
                     httpContext, IdentityConstants.ApplicationScheme);
 
@@ -144,24 +153,34 @@ namespace Security.WebAppLib.Example
             string? ForbidScheme, 
             string? AuthenticateScheme);
 
-        public async Task<DefaultSchemeNames?> ExploreAuthenticationSchemeProvider(IAuthenticationSchemeProvider schemes)
+        /// <summary>
+        /// Explore the configuration of various default authentication schemes
+        /// for various authentication behaviors
+        /// </summary>
+        public async Task<DefaultSchemeNames?> ExploreAuthenticationSchemeProvider(
+            IAuthenticationSchemeProvider schemes)
         {
             DefaultSchemeNames? defaultSchemes = null;
 
             if (schemes is AuthenticationSchemeProvider schemeProvider)
             {
+                // handler reponsible for sign-in logic
                 AuthenticationScheme? signInScheme = 
                     await schemeProvider.GetDefaultSignInSchemeAsync();
 
+                // handler reponsible for sign-out logic
                 AuthenticationScheme? signOutScheme = 
                     await schemeProvider.GetDefaultSignOutSchemeAsync();
 
+                // redirect ot log-in page
                 AuthenticationScheme? challengeScheme = 
                     await schemeProvider.GetDefaultChallengeSchemeAsync();
 
+                // redirect to unauthorize page
                 AuthenticationScheme? forbidScheme = 
                     await schemeProvider.GetDefaultForbidSchemeAsync();
 
+                // reconstruct PrincipalClaims from cookie/token
                 AuthenticationScheme? authenticateScheme = 
                     await schemeProvider.GetDefaultAuthenticateSchemeAsync();
 
@@ -188,6 +207,9 @@ namespace Security.WebAppLib.Example
 
         #region CookieAuthenticationOptions
 
+        /// <summary>
+        /// Configuration for authentication cookie
+        /// </summary>
         public void ExploreCookieAuthenticationOptions()
         {
 
@@ -246,6 +268,9 @@ namespace Security.WebAppLib.Example
 
         #region Explore SignInManager
 
+        /// <summary>
+        /// Sign-In logic
+        /// </summary>
         public void ExploreSignInManager()
         {
             if (GetHttpContext(_signInManager) is HttpContext context)
@@ -282,6 +307,9 @@ namespace Security.WebAppLib.Example
             protected set; 
         }
 
+        /// <summary>
+        /// Various sign-In logic
+        /// </summary>
         public async Task SignInWithManager(IMyUser user)
         {
             try { await _signInManager.SignInAsync(user, true); }
@@ -294,6 +322,9 @@ namespace Security.WebAppLib.Example
                 ExploreHttpContext(httpContext);
         }
 
+        /// <summary>
+        /// Various sign-In logic
+        /// </summary>
         public async Task SignInWithHttpContext(ClaimsIdentity identity)
         {
             var u = new ClaimsPrincipal(identity);
@@ -312,6 +343,9 @@ namespace Security.WebAppLib.Example
             }
         }
 
+        /// <summary>
+        /// Various sign-In logic
+        /// </summary>
         public async Task SignInWithAuthenticationService(ClaimsIdentity identity)
         {
             var u = new ClaimsPrincipal(identity);
@@ -332,6 +366,9 @@ namespace Security.WebAppLib.Example
             }
         }
 
+        /// <summary>
+        /// Various sign-In logic
+        /// </summary>
         public async Task SignInWithCookieHandler(ClaimsIdentity identity)
         {
             var u = new ClaimsPrincipal(identity);

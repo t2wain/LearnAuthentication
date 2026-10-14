@@ -12,6 +12,10 @@ namespace Security.WebAppLib.Example
         UserManager<IMyUser> _userManager;
         RoleManager<IMyRole> _roleManager;
 
+
+        /// <summary>
+        /// Services available from DI container
+        /// </summary>
         public ExploreIdentity(
             IUserStore<IMyUser> userStore,
             IRoleStore<IMyRole> roleStore,
