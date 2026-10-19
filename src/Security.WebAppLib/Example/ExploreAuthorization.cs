@@ -86,7 +86,7 @@ namespace Security.WebAppLib.Example
         public async Task AuthorizeResource()
         {
             var user = CreateUser();
-            var resource = new AuthorizationService.AppData(1);
+            var resource = new MyAuthorizationService.AppData(1);
             AuthorizationResult res = 
                 await _authorizationService.AuthorizeAsync(user, resource, "policy5");
             bool b = res.Succeeded;

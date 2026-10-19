@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Security.WebAppLib;
 using Security.WebAppLib.Example;
@@ -14,8 +15,8 @@ namespace Security.ConsoleApp
             //WinSecurity();
             IHost host = CreateHost();
             CreateEx(host);
-            //RunEx1(host);
-            RunEx2(host);
+            RunEx1(host);
+            //RunEx2(host);
         }
 
         public static void CreateEx(IHost host)
@@ -33,11 +34,12 @@ namespace Security.ConsoleApp
             // authentication, and authorization.
             AppService appService = new(builder.Services, builder.Configuration);
             appService.AddMyIdentity();
-            appService.AddMyAuthentication();
-            //appService.AddMyAuthorization();
-            AuthorizationService.ConfigureAuthorization(builder.Services, builder.Configuration);
-            appService.AddMyExamples();
-            appService.AddMyHttpContextAccessor();
+            AuthenticationBuilder b = appService.AddMyAuthentication();
+            b = appService.AddMyAuthenticationJwtBearer(b, "JwtConfig");
+            //b = appService.AddMyAuthenticationCookie(b);
+            appService.AddMyAuthorization();
+            appService.AddMyAuthExamples();
+            appService.AddMyTestHttpContextAccessor();
 
 
             IHost app = builder.Build();

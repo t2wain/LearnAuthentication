@@ -7,7 +7,7 @@ namespace Security.WebAppLib.Example
     /// <summary>
     /// Examples of how to configure Authorization
     /// </summary>
-    public class AuthorizationService
+    public class MyAuthorizationService
     {
         #region Requirements
 
@@ -73,32 +73,30 @@ namespace Security.WebAppLib.Example
 
         #region Configure Authorization
 
-        /// <summary>
-        /// Provide examples of registering Authorization components with DI container
-        /// </summary>
-        public static void ConfigureAuthorization(
-            IServiceCollection services, IConfiguration config)
+        public static void ConfigureServices(IServiceCollection services, IConfiguration config)
         {
             // register custom handler to evaluate authorization base on requirement
             services.AddSingleton<IAuthorizationHandler, AppDataAuthorizationHandler>();
+        }
 
-            services.AddAuthorization((AuthorizationOptions configure) =>
-            {
-                // build authorization policy
-                configure
-                    .AddPolicy("policy1&2", (AuthorizationPolicyBuilder configurePolicy) => 
-                    {
-                        var b = BuildPolicy(configurePolicy, 1);
-                        b = BuildPolicy(b, 2);
-                    });
+        /// <summary>
+        /// Provide examples of registering Authorization components with DI container
+        /// </summary>
+        public static void ConfigureAuthorizationOptions(AuthorizationOptions options)
+        {
+            // build authorization policy
+            options
+                .AddPolicy("policy1&2", (AuthorizationPolicyBuilder configurePolicy) => 
+                {
+                    var b = BuildPolicy(configurePolicy, 1);
+                    b = BuildPolicy(b, 2);
+                });
 
-                // build authorization policy
-                configure.AddPolicy("policy2", CreatePolicy(2));
+            // build authorization policy
+            options.AddPolicy("policy2", CreatePolicy(2));
 
-                // build authorization policy
-                configure.AddPolicy("policy5", CreatePolicy(5));
-
-            });
+            // build authorization policy
+            options.AddPolicy("policy5", CreatePolicy(5));
         }
 
         /// <summary>

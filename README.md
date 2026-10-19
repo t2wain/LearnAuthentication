@@ -148,7 +148,7 @@ The following classes provide examples about these 3 layers:
 - Security.WebAppLib.Example
 	- [ExploreIdentity.cs](./src/Security.WebAppLib/Example/ExploreIdentity.cs)
 	- [ExploreAuthentication.cs](./src/Security.WebAppLib/Example/ExploreAuthentication.cs)
-	- [AuthorizationService.cs](./src/Security.WebAppLib/Example/AuthorizationService.cs)
+	- [MyAuthorizationService.cs](./src/Security.WebAppLib/Example/MyAuthorizationService.cs)
 	- [ExploreAuthorization.cs](./src/Security.WebAppLib/Example/ExploreAuthorization.cs)
 
 # Additional Documents

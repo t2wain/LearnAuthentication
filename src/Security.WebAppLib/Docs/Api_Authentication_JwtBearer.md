@@ -1,0 +1,109 @@
+﻿# Nuget Packages
+
+- Microsoft.AspNetCore.Authentication.JwtBearer
+- System.IdentityModel.Tokens.Jwt
+
+# Assembly : Microsoft.AspNetCore.Authentication.JwtBearer
+
+## Microsoft.AspNetCore.Authentication.JwtBearer
+
+- AuthenticationFailedContext : ResultContext\<JwtBearerOptions>
+	- AuthenticationFailedContext(...)
+		- HttpContext context, 
+		- AuthenticationScheme scheme, 
+		- JwtBearerOptions options
+	- Exception : System.Exception
+- ForbiddenContext : ResultContext\<JwtBearerOptions>
+	- ForbiddenContext(...)
+		- HttpContext context, 
+		- AuthenticationScheme scheme, 
+		- JwtBearerOptions options
+- JwtBearerChallengeContext : PropertiesContext\<JwtBearerOptions>
+	- JwtBearerChallengeContext(...)
+		- HttpContext context, 
+		- AuthenticationScheme scheme, 
+		- JwtBearerOptions options
+		- AuthenticationProperties properties
+	- HandleResponse()
+	- AuthenticateFailure : System.Exception
+	- Error : string
+	- ErrorDescription :string
+	- ErrorUri : string
+	- Handled : bool
+- JwtBearerDefaults
+	- AuthenticationScheme :string
+- JwtBearerEvents
+	- JwtBearerEvents()
+	- AuthenticationFailed(AuthenticationFailedContext context)
+	- Challenge(JwtBearerChallengeContext context)
+	- Forbidden(ForbiddenContext context)
+	- MessageReceived(MessageReceivedContext context)
+	- TokenValidated(TokenValidatedContext context)
+	- OnAuthenticationFailed : System.Func<AuthenticationFailedContext, Task> 
+	- OnChallenge : System.Func<JwtBearerChallengeContext, Task> 
+	- OnForbidden : System.Func<ForbiddenContext, Task> 
+	- OnMessageReceived : System.Func<MessageReceivedContext, Task> 
+	- OnTokenValidated : System.Func<TokenValidatedContext, Task> 
+- JwtBearerHandler : AuthenticationHandler\<JwtBearerOptions>
+	- JwtBearerHandler(...)
+		- IOptionsMonitor\<JwtBearerOptions> options, 
+		- ILoggerFactory logger, 
+		- UrlEncoder encoder
+	- JwtBearerHandler(...)
+		- IOptionsMonitor\<JwtBearerOptions> options, 
+		- ILoggerFactory logger, 
+		- UrlEncoder encoder
+		- ISystemClock clock
+- JwtBearerOptions : AuthenticationSchemeOptions
+	- JwtBearerOptions()
+	- Audience : string
+	- Authority : string
+	- AutomaticRefreshInterval : System.TimeSpan
+	- Backchannel : HttpClient
+	- BackchannelHttpHandler : HttpMessageHandler
+	- BackchannelTimeout : System.TimeSpan
+	- Challenge : string
+	- Configuration : OpenIdConnectConfiguration
+	- ConfigurationManager : IConfigurationManager\<OpenIdConnectConfiguration> 
+	- Events : JwtBearerEvents
+	- IncludeErrorDetails : bool
+	- MapInboundClaims : bool
+	- MetadataAddress : string
+	- RefreshInterval : System.TimeSpan
+	- RefreshOnIssuerKeyNotFound : bool
+	- RequireHttpsMetadata : bool
+	- SaveToken : bool
+	- SecurityTokenValidators : IList\<ISecurityTokenValidator>
+	- TokenHandlers : IList\<TokenHandler>
+	- TokenValidationParameters : TokenValidationParameters
+	- UseSecurityTokenValidators : bool
+- JwtBearerPostConfigureOptions
+	- : Microsoft.Extensions.Options.IPostConfigureOptions\<JwtBearerOptions>
+	- JwtBearerPostConfigureOptions()
+	- PostConfigure(string name, JwtBearerOptions options)
+- MessageReceivedContext : ResultContext\<JwtBearerOptions>
+	- MessageReceivedContext(...)
+		- HttpContext context, 
+		- AuthenticationScheme scheme,
+		- JwtBearerOptions options
+	- Token : string
+- TokenValidatedContext : ResultContext\<JwtBearerOptions>
+	- TokenValidatedContext(...)
+		- HttpContext context, 
+		- AuthenticationScheme scheme,
+		- JwtBearerOptions options
+	- SecurityToken : SecurityToken
+
+## Microsoft.Extensions.DependencyInjection
+
+- JwtBearerExtensions (AuthenticationBuilder)
+	- AddJwtBearer()
+	- AddJwtBearer(string authenticationScheme)
+	- **AddJwtBearer**(...)
+		- string authenticationScheme, 
+		- string displayName, 
+		- System.Action\<JwtBearerOptions> configureOptions
+	- AddJwtBearer(...)
+		- string authenticationScheme, 
+		- System.Action\<JwtBearerOptions> configureOptions
+	- AddJwtBearer(System.Action\<JwtBearerOptions> configureOptions)

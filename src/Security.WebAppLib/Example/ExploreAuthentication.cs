@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Security.WebAppLib.IdentityCore;
 using System.Security.Claims;
@@ -53,7 +55,7 @@ namespace Security.WebAppLib.Example
 
         public async Task Run(int testNo = 0)
         {
-            int? o = 4;
+            int? o = 5;
             var t = o ?? testNo;
             switch(t)
             {
@@ -73,6 +75,9 @@ namespace Security.WebAppLib.Example
                     var identity = CreateIdentity(IdentityConstants.ApplicationScheme);
                     await SignInWithHttpContext(identity);
                     break;
+                case 5:
+                    await ExploreJwtScheme();
+                    break;
             }
         }
 
@@ -90,10 +95,19 @@ namespace Security.WebAppLib.Example
             s = IdentityConstants.TwoFactorUserIdScheme;
             s = IdentityConstants.TwoFactorRememberMeScheme;
 
-            AuthenticationScheme? defaultScheme = 
+            AuthenticationScheme? defaultAuthenticateScheme = 
                 await _authenticationSchemeProvider.GetDefaultAuthenticateSchemeAsync();
-            if (defaultScheme != null)
-                ExploreAuthenticationScheme(defaultScheme);
+            if (defaultAuthenticateScheme != null)
+                ExploreAuthenticationScheme(defaultAuthenticateScheme);
+
+            AuthenticationScheme? defaultChallengeScheme =
+                await _authenticationSchemeProvider.GetDefaultChallengeSchemeAsync();
+            AuthenticationScheme? defaultForbidScheme =
+                await _authenticationSchemeProvider.GetDefaultForbidSchemeAsync();
+            AuthenticationScheme? defaultSignInScheme =
+                await _authenticationSchemeProvider.GetDefaultSignInSchemeAsync();
+            AuthenticationScheme? defaultSignOutScheme =
+                await _authenticationSchemeProvider.GetDefaultSignOutSchemeAsync();
 
             IEnumerable<AuthenticationScheme> schemes = 
                 await this._authenticationSchemeProvider.GetAllSchemesAsync();
@@ -420,6 +434,32 @@ namespace Security.WebAppLib.Example
             CookieAuthenticationOptions options = _cookieOptions.Get(scheme);
             AuthenticationTicket? ticket = options.TicketDataFormat.Unprotect(cookieValue);
             return ticket;
+        }
+
+        #endregion
+
+        #region JWT
+
+        public async Task ExploreJwtScheme()
+        {
+            if (await GetJwtBearerHandler() is JwtBearerHandler jwtHandler)
+            {
+                JwtBearerOptions options = 
+                    _provider.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().CurrentValue;
+                TokenValidationParameters validation = options.TokenValidationParameters;
+            }
+        }
+
+        public async Task<JwtBearerHandler?> GetJwtBearerHandler()
+        {
+            AuthenticationScheme? scheme =
+                await _authenticationSchemeProvider.GetSchemeAsync(JwtBearerDefaults.AuthenticationScheme);
+            if (scheme != null
+                && _provider.GetService(scheme.HandlerType) is JwtBearerHandler jwtHandler)
+            {
+                return jwtHandler;
+            }
+            return null;
         }
 
         #endregion

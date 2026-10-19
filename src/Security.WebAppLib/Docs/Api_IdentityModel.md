@@ -1,0 +1,632 @@
+﻿# Assembly : Microsoft.IdentityModel.Abstractions
+
+## Microsoft.IdentityModel.Abstractions
+
+- EventLogLevel
+- IIdentityLogger
+- ITelemetryClient
+- LogEntry
+- NullIdentityModelLogger : IIdentityLogger
+- NullTelemetryClient : ITelemetryClient
+- ObservabilityConstants
+- TelemetryEventDetails
+
+# Assembly : Microsoft.IdentityModel.JsonWebTokens
+
+## Microsoft.IdentityModel.JsonWebTokens
+
+- JsonClaimValueTypes (static)
+	- Json : string
+	- JsonArray : string
+	- JsonNull : string
+- **JsonWebToken** : **SecurityToken**
+	- JsonWebToken(string **jwtEncodedString**)
+	- JsonWebToken(...)
+		- string jwtEncodedString, 
+		- TryReadJwtClaim tryReadJwtClaim
+	- JsonWebToken(string **header**, string **payload**)
+	- JsonWebToken(...)
+		- string header, 
+		- string payload, 
+		- TryReadJwtClaim tryReadJwtClaim
+	- JsonWebToken(System.ReadOnlyMemory\<char> encodedTokenMemory)
+	- JsonWebToken(...)
+		- System.ReadOnlyMemory\<char> encodedTokenMemory, 
+		- TryReadJwtClaim tryReadJwtClaim
+	- GetClaim(string key) : Claim
+	- GetHeaderValue\<T>(string key) : T
+	- GetPayloadValue\<T>(string key) : T
+	- TryGetClaim(string key, out Claim value) : bool
+	- TryGetHeaderValue\<T>(string key, out T value) : bool
+	- TryGetPayloadValue\<T>(string key, out T value) : bool
+	- TryGetValue\<T>(string key, out T value) : bool
+	- UnsafeToString() : string
+	- Actor : string
+	- Alg : string
+	- Audiences : IEnumerable\<string>
+	- AuthenticationTag : string
+	- Azp : string
+	- Ciphertext : string
+	- Claims : IEnumerable\<Claim>
+	- Cty : string
+	- Enc : string
+	- EncodedHeader : string
+	- EncodedPayload : string
+	- EncodedSignature : string
+	- EncodedToken : string
+	- EncryptedKey : string
+	- Id : string
+	- InitializationVector : string
+	- InnerToken : JsonWebToken
+	- IsEncrypted : bool
+	- IsSigned : bool
+	- IssuedAt : System.DateTime
+	- Issuer : string
+	- Kid : string
+	- SecurityKey : **SecurityKey**
+	- SigningKey : **SecurityKey**
+	- Subject : string
+	- Typ : string
+	- ValidFrom : System.DateTime
+	- ValidTo : System.DateTime
+	- X5t : string
+	- Zip : string
+- **JsonWebTokenHandler** : TokenHandler
+	- JsonWebTokenHandler()
+	- CanReadToken(string token) : bool
+	- CreateToken(**SecurityTokenDescriptor** tokenDescriptor) : string
+	- CreateToken(string payload) : string
+	- CreateToken(...) : string
+		- string payload, 
+		- EncryptingCredentials encryptingCredentials
+	- CreateToken(...) : string
+		- string payload, 
+		- EncryptingCredentials encryptingCredentials
+		- string compressionAlgorithm
+	- CreateToken(...) : string
+		- string payload, 
+		- EncryptingCredentials encryptingCredentials
+		- IDictionary<string, object> additionalHeaderClaims
+	- CreateToken(...) : string
+		- string payload, 
+		- SigningCredentials signingCredentials
+	- CreateToken(...) : string
+		- string payload, 
+		- SigningCredentials signingCredentials
+		- EncryptingCredentials encryptingCredentials
+	- CreateToken(...) : string
+		- string payload, 
+		- SigningCredentials signingCredentials
+		- EncryptingCredentials encryptingCredentials
+		- string compressionAlgorithm
+	- CreateToken(...) : string
+		- string payload, 
+		- SigningCredentials signingCredentials
+		- EncryptingCredentials encryptingCredentials
+		- string compressionAlgorithm
+		- IDictionary<string, object> additionalHeaderClaims
+	- CreateToken(...) : string
+		- string payload, 
+		- SigningCredentials signingCredentials
+		- EncryptingCredentials encryptingCredentials
+		- string compressionAlgorithm
+		- IDictionary<string, object> additionalHeaderClaims
+		- IDictionary<string, object> additionalInnerHeaderClaims
+	- CreateToken(...) : string
+		- string payload, 
+		- SigningCredentials signingCredentials
+		- EncryptingCredentials encryptingCredentials
+		- IDictionary<string, object> additionalHeaderClaims
+	- CreateToken(...) : string
+		- string payload, 
+		- SigningCredentials signingCredentials
+		- IDictionary<string, object> additionalHeaderClaims
+	- CreateToken(...) : string
+		- string payload, 
+		- IDictionary<string, object> additionalHeaderClaims
+	- DecryptToken(...) : string
+		- JsonWebToken jwtToken, 
+		- TokenValidationParameters validationParameters
+	- DecryptTokenWithConfigurationAsync(...) : Task\<string>
+		- JsonWebToken jwtToken, 
+		- TokenValidationParameters validationParameters, 
+		- CancellationToken cancellationToken
+	- EncryptToken(...) : string
+		- string innerJwt, 
+		- EncryptingCredentials encryptingCredentials
+	- EncryptToken(...) : string
+		- string innerJwt, 
+		- EncryptingCredentials encryptingCredentials
+		- string algorithm
+	- EncryptToken(...) : string
+		- string innerJwt, 
+		- EncryptingCredentials encryptingCredentials
+		- string algorithm
+		- IDictionary<string, object> additionalHeaderClaims
+	- EncryptToken(...) : string
+		- string innerJwt, 
+		- EncryptingCredentials encryptingCredentials
+		- IDictionary<string, object> additionalHeaderClaims
+	- ReadJsonWebToken(string token) : JsonWebToken 
+	- ReadJsonWebToken(System.ReadOnlyMemory\<char> token) : JsonWebToken
+	- ReadToken(string token) : SecurityToken
+	- ReplaceTokenHeader(...) : SecurityToken
+		- JsonWebToken jsonWebToken, 
+		- string encodedHeader
+	- ValidateToken(...) : **TokenValidationResult**
+		- string token, 
+		- **TokenValidationParameters** validationParameters
+	- ValidateTokenAsync(...) : Task\<TokenValidationResult>
+		- SecurityToken token, 
+		- TokenValidationParameters validationParameters
+	- ValidateTokenAsync(...) : Task\<TokenValidationResult>
+		- string token, 
+		- TokenValidationParameters validationParameters
+	- CanValidateToken : bool
+	- InboundClaimTypeMap : IDictionary<string, string> 
+	- MapInboundClaims : bool
+	- ShortClaimTypeProperty : string
+	- TokenType : System.Type
+	- DefaultInboundClaimTypeMap : IDictionary<string, string>
+	- DefaultMapInboundClaims : bool
+	- Base64UrlEncodedUnsignedJWSHeader : string
+- JwtConstants (static)
+- JwtHeaderParameterNames (struct)
+- JwtRegisteredClaimNames (struct)
+	- Acr : string
+	- Actort
+	- Address
+	- Alg
+	- Amr
+	- AtHash
+	- Aud
+	- AuthTime
+	- Azp
+	- Birthdate
+	- CHash
+	- Email
+	- EmailVerified
+	- Exp
+	- FamilyName
+	- Gender
+	- GivenName
+	- Iat
+	- Iss
+	- Jti
+	- Locale
+	- MiddleName
+	- Name
+	- NameId
+	- Nbf
+	- Nickname
+	- Nonce
+	- PhoneNumber
+	- PhoneNumberVerified
+	- Picture
+	- PreferredUsername
+	- Prn
+	- Profile
+	- Sid
+	- Sub
+	- Typ
+	- UniqueName
+	- UpdatedAt
+	- Website
+	- ZoneInfo
+- JwtTokenUtilities
+	- JwtTokenUtilities()
+	- CreateEncodedSignature(...) : string
+		- string input, 
+		- SigningCredentials signingCredentials
+	- CreateEncodedSignature(...) : string
+		- string input, 
+		- SigningCredentials signingCredentials, 
+		- bool cacheProvider
+	- GenerateKeyBytes(int sizeInBits) : byte[]
+	- GetAllDecryptionKeys(...) : IEnumerable\<SecurityKey>
+		- TokenValidationParameters validationParameters
+	- RegexJwe : Regex
+	- RegexJws : Regex
+
+# Assembly : Microsoft.IdentityModel.Logging
+
+## Microsoft.IdentityModel.Logging
+
+- IdentityModelEventSource : EventSource
+- IdentityModelTelemetryUtil
+- ISafeLogSecurityArtifact
+- LoggerContext
+- LogHelper
+- TextWriterEventListener : EventListener
+
+# Assembly : Microsoft.IdentityModel.Protocols
+
+## Microsoft.IdentityModel.Protocols
+
+- AuthenticationProtocolMessage
+- ConfigurationManager\<T> : BaseConfigurationManager
+- ConfigurationValidationResult
+- FileDocumentRetriever
+- HttpDocumentRetriever
+- HttpRequestData
+- IConfigurationManager\<T>
+- IConfigurationRetriever\<T>
+- IConfigurationValidator\<T>
+- IDocumentRetriever
+- StaticConfigurationManager\<T> : BaseConfigurationManager
+- X509CertificateValidationMode
+
+## Microsoft.IdentityModel.Protocols.Configuration
+
+- ConfigurationEventHandlerResult\<T>
+- ConfigurationRetrievalContext
+- IConfigurationEventHandler\<T>
+- IConfigurationEventHandlerContextAware\<T>
+- InvalidConfigurationException : System.Exception
+- LastKnownGoodConfigurationCacheOptions : LKGConfigurationCacheOptions
+
+# Assembly : Microsoft.IdentityModel.Protocols.OpenIdConnect
+
+## Microsoft.IdentityModel.Protocols.OpenIdConnect
+
+- ActiveDirectoryOpenIdConnectEndpoints
+- delgate IdTokenValidator(...) : void
+	- JwtSecurityToken idToken, 
+	- OpenIdConnectProtocolValidationContext context
+- OpenIdConnectConfiguration : BaseConfiguration
+- OpenIdConnectConfigurationRetriever
+- OpenIdConnectGrantTypes
+- OpenIdConnectMessage : AuthenticationProtocolMessage
+- OpenIdConnectParameterNames
+- OpenIdConnectPrompt
+- OpenIdConnectProtocolException : System.Exception
+- OpenIdConnectProtocolInvalidAtHashException : OpenIdConnectProtocolException
+- OpenIdConnectProtocolInvalidCHashException : OpenIdConnectProtocolException
+- OpenIdConnectProtocolInvalidNonceException : OpenIdConnectProtocolException
+- OpenIdConnectProtocolInvalidStateException : OpenIdConnectProtocolException
+- OpenIdConnectProtocolValidationContext
+- OpenIdConnectProtocolValidator
+- OpenIdConnectRequestType
+- OpenIdConnectResponseMode
+- OpenIdConnectResponseType
+- OpenIdConnectScope
+- OpenIdConnectSessionProperties
+- OpenIdProviderMetadataNames
+
+## Microsoft.IdentityModel.Protocols.OpenIdConnect.Configuration
+
+- OpenIdConnectConfigurationValidator
+
+# Assembly : Microsoft.IdentityModel.Tokens
+
+## Microsoft.IdentityModel.Tokens
+
+- AlgorithmValidator(...) : bool (delgate)
+	- string algorithm
+	- SecurityKey securityKey
+	- SecurityToken securityToken
+	- TokenValidationParameters validationParameters
+- AppCompatSwitches
+- AsymmetricSecurityKey : SecurityKey
+- AsymmetricSignatureProvider : SignatureProvider
+- AudienceValidator(...) : bool (delegate)
+	- IEnumerable\<string> audiences, 
+	- SecurityToken securityToken, 
+	- TokenValidationParameters validationParameters
+- AuthenticatedEncryptionProvider
+- AuthenticatedEncryptionResult
+- Base64UrlEncoder
+- BaseConfiguration
+- BaseConfigurationManager
+- CallContext : LoggerContext
+- CaseSensitiveClaimsIdentity : ClaimsIdentity
+- Cnf
+- CompressionAlgorithms
+- CompressionProviderFactory
+- ConfirmationClaimTypes
+- CryptoProviderCache
+- CryptoProviderCacheOptions
+- CryptoProviderFactory
+	- CryptoProviderFactory()
+	- CryptoProviderFactory(CryptoProviderCache cache)
+	- CryptoProviderFactory(CryptoProviderFactory other)
+	- CreateAuthenticatedEncryptionProvider(...) : AuthenticatedEncryptionProvider
+		- SecurityKey key, 
+		- string algorithm
+	- CreateForSigning(...) : SignatureProvider 
+		- SecurityKey key, 
+		- string algorithm
+	- CreateForSigning(...) : SignatureProvider 
+		- SecurityKey key, 
+		- string algorithm, 
+		- bool cacheProvider
+	- CreateForVerifying(...) : SignatureProvider
+		- SecurityKey key, 
+		- string algorithm
+	- CreateForVerifying(...) : SignatureProvider
+		- SecurityKey key, 
+		- string algorithm
+		- bool cacheProvider
+	- CreateHashAlgorithm(string algorithm) : HashAlgorithm
+	- CreateHashAlgorithm(HashAlgorithmName algorithm) : HashAlgorithm
+	- CreateKeyedHashAlgorithm(...) : KeyedHashAlgorithm
+		- byte[] keyBytes, 
+		- string algorithm
+	- CreateKeyWrapProvider(...) : KeyWrapProvider
+		- SecurityKey key, 
+		- string algorithm
+	- IsSupportedAlgorithm(string algorithm) : bool
+	- IsSupportedAlgorithm(string algorithm, SecurityKey key) : bool
+	- ReleaseHashAlgorithm(HashAlgorithm hashAlgorithm)
+	- ReleaseKeyWrapProvider(KeyWrapProvider provider)
+	- ReleaseRsaKeyWrapProvider(RsaKeyWrapProvider provider)
+	- ReleaseSignatureProvider(SignatureProvider signatureProvider)
+	- CacheCustomProviders : bool
+	- CacheSignatureProviders : bool
+	- CryptoProviderCache : CryptoProviderCache
+	- CustomCryptoProvide : ICryptoProvider
+	- Default : CryptoProviderFactory 
+	- DefaultCacheSignatureProviders : bool
+	- DefaultSignatureProviderObjectPoolCacheSize : int
+	- SignatureProviderObjectPoolCacheSize : int
+- DateTimeUtil
+- DeflateCompressionProvider
+- EcdhKeyExchangeProvider
+- ECDsaSecurityKey : AsymmetricSecurityKey
+- EncryptingCredentials
+	- EncryptingCredentials(...)
+		- SecurityKey key, 
+		- string alg, 
+		- string enc
+	- EncryptingCredentials(...)
+		- SecurityKey key, 
+		- string enc
+	- Alg : string
+	- CryptoProviderFactory : CryptoProviderFactory 
+	- Enc : string
+	- Key : SecurityKey
+	- KeyExchangePublicKey : SecurityKey
+	- SetDefaultCtyClaim : bool
+- EpochTime
+- ICompressionProvider
+- ICryptoProvider
+- InMemoryCryptoProviderCache : CryptoProviderCache
+- ISecurityTokenValidator
+- IssuerSigningKeyResolver(...) : IEnumerable\<SecurityKey> (delegate)
+	- string token, 
+	- SecurityToken securityToken, 
+	- string kid, 
+	- TokenValidationParameters validationParameters
+- IssuerSigningKeyValidator(...) : bool (delegate)
+	- SecurityKey securityKey, 
+	- SecurityToken securityToken, 
+	- TokenValidationParameters validationParameters
+- IssuerSigningKeyValidatorUsingConfiguration(...) : bool (delegate)
+	- SecurityKey securityKey, 
+	- SecurityToken securityToken, 
+	- TokenValidationParameters validationParameters, 
+	- BaseConfiguration configuration
+- IssuerValidator(...) : string (delegate)
+	- string issuer, 
+	- SecurityToken securityToken,
+	- TokenValidationParameters validationParameters
+- IssuerValidatorUsingConfiguration(...) : string (delegate)
+	- string issuer, 
+	- SecurityToken securityToken, 
+	- TokenValidationParameters validationParameters, 
+	- BaseConfiguration configuration
+- ITokenReplayCache
+- JsonWebAlgorithmsKeyTypes
+- JsonWebKey : SecurityKey
+- JsonWebKeyConverter
+- JsonWebKeyECTypes
+- JsonWebKeyParameterNames
+- JsonWebKeySet
+- JsonWebKeySetParameterNames
+- JsonWebKeyUseNames
+- JwtSegmentType
+- KeyWrapProvider
+- LifetimeValidator(...) : bool (delegate)
+	- System.DateTime? notBefore, 
+	- System.DateTime? expires, 
+	- SecurityToken securityToken, 
+	- TokenValidationParameters validationParameters
+- MlDsaSecurityKey : AsymmetricSecurityKey
+- PrivateKeyStatus
+- RsaKeyWrapProvider : KeyWrapProvider
+- RsaSecurityKey : AsymmetricSecurityKey
+- **SecurityAlgorithms** (static)
+	- Aes128CbcHmacSha256 : string
+	- **HmacSha256** : string
+	- Sha512Digest : string
+- SecurityKey
+	- SecurityKey()
+	- CanComputeJwkThumbprint() : bool
+	- ComputeJwkThumbprint() : byte[]
+	- IsSupportedAlgorithm(string algorithm) : bool
+	- CryptoProviderFactory : CryptoProviderFactory 
+	- KeyId : string
+	- KeySize : int
+- SecurityKeyIdentifierClause
+- SecurityToken
+- SecurityTokenArgumentException : System.ArgumentException
+- SecurityTokenCompressionFailedException : SecurityTokenException
+- SecurityTokenDecompressionFailedException : SecurityTokenException
+- SecurityTokenDecryptionFailedException : SecurityTokenException
+- **SecurityTokenDescriptor**
+	- SecurityTokenDescriptor()
+	- AdditionalHeaderClaims : IDictionary<string, object>
+	- AdditionalInnerHeaderClaims : IDictionary<string, object>
+	- Audience : string
+	- Audiences : IList\<string>
+	- Claims : IDictionary<string, object>
+	- CompressionAlgorithm : string
+	- EncryptingCredentials : **EncryptingCredentials**
+	- Expires : System.DateTime?
+	- IncludeKeyIdInHeader : bool
+	- IssuedAt : System.DateTime?
+	- Issuer : string
+	- NotBefore : System.DateTime?
+	- SigningCredentials : **SigningCredentials**
+	- Subject : ClaimsIdentity
+	- TokenType : string
+- SecurityTokenEncryptionFailedException : SecurityTokenException
+- SecurityTokenEncryptionKeyNotFoundException : SecurityTokenDecryptionFailedException
+- SecurityTokenException : System.Exception
+- SecurityTokenExpiredException : SecurityTokenValidationException
+- SecurityTokenHandler : TokenHandler
+- SecurityTokenInvalidAlgorithmException : SecurityTokenValidationException
+- SecurityTokenInvalidAudienceException : SecurityTokenValidationException
+- SecurityTokenInvalidCloudInstanceException : SecurityTokenInvalidSigningKeyException
+- SecurityTokenInvalidIssuerException : SecurityTokenValidationException
+- SecurityTokenInvalidLifetimeException : SecurityTokenValidationException
+- SecurityTokenInvalidSignatureException : SecurityTokenValidationException
+- SecurityTokenInvalidSigningKeyException : SecurityTokenValidationException
+- SecurityTokenInvalidTypeException : SecurityTokenValidationException
+- SecurityTokenKeyWrapException : SecurityTokenException
+- SecurityTokenMalformedException : SecurityTokenArgumentException
+- SecurityTokenNoExpirationException : SecurityTokenValidationException
+- SecurityTokenNotYetValidException : SecurityTokenValidationException
+- SecurityTokenReplayAddFailedException : SecurityTokenValidationException
+- SecurityTokenReplayDetectedException : SecurityTokenValidationException
+- SecurityTokenSignatureKeyNotFoundException : SecurityTokenInvalidSignatureException
+- SecurityTokenValidationException : SecurityTokenException
+- SignatureProvider
+- SignatureValidator(...) : SecurityToken (delegate)
+	- string token, 
+	- TokenValidationParameters validationParameters
+- SignatureValidatorUsingConfiguration(...) : SecurityToken (delegate)
+	- string token, 
+	- TokenValidationParameters validationParameters, 
+	- BaseConfiguration configuration
+- **SigningCredentials**
+	- SigningCredentials(SecurityKey key, string algorithm)
+	- SigningCredentials(SecurityKey key, string algorithm, string digest)
+	- Algorithm : string
+	- CryptoProviderFactory : CryptoProviderFactory 
+	- Digest : string
+	- Key : SecurityKey
+	- Kid : string
+- SymmetricKeyWrapProvider : KeyWrapProvider
+- **SymmetricSecurityKey** : SecurityKey
+	- SymmetricSecurityKey(byte[] key)
+	- CanComputeJwkThumbprint() : bool
+	- ComputeJwkThumbprint() : byte[]
+	- Key : byte[]
+	- KeySize : int
+- SymmetricSignatureProvider : SignatureProvider
+- TokenContext : CallContext
+- TokenDecryptionKeyResolver(...) : IEnumerable\<SecurityKey> (delegate)
+	- string token, 
+	- SecurityToken securityToken, 
+	- string kid, 
+	- TokenValidationParameters validationParameters
+- TokenHandler
+- TokenReader(...) : SecurityToken (delegate)
+	- string token, 
+	- TokenValidationParameters validationParameters
+- TokenReplayValidator(...) : bool (delegate)
+	- System.DateTime? expirationTime, 
+	- string securityToken, 
+	- TokenValidationParameters validationParameters
+- **TokenValidationParameters**
+	- TokenValidationParameters()
+	- Clone() : TokenValidationParameters
+	- CreateClaimsIdentity(...) : ClaimsIdentity
+		- SecurityToken securityToken, 
+		- string issuer
+	- ActorValidationParameters : TokenValidationParameters 
+	- AlgorithmValidator : AlgorithmValidator 
+	- AudienceValidator : AudienceValidator 
+	- **AuthenticationType** : string
+	- ClockSkew : System.TimeSpan
+	- ConfigurationManager : BaseConfigurationManager
+	- CryptoProviderFactory : CryptoProviderFactory 
+	- DebugId : string
+	- IgnoreTrailingSlashWhenValidatingAudience : bool
+	- IncludeTokenOnFailedValidation : bool
+	- InstancePropertyBag : IDictionary<string, object>
+	- IsClone : bool
+	- **IssuerSigningKey** : SecurityKey
+	- IssuerSigningKeyResolver : IssuerSigningKeyResolver 
+	- IssuerSigningKeyResolverUsingConfiguration : IssuerSigningKeyResolverUsingConfiguration
+	- IssuerSigningKeys : IEnumerable\<SecurityKey>
+	- IssuerSigningKeyValidator : IssuerSigningKeyValidator 
+	- IssuerSigningKeyValidatorUsingConfiguration : IssuerSigningKeyValidatorUsingConfiguration
+	- IssuerValidator : IssuerValidator 
+	- IssuerValidatorUsingConfiguration : IssuerValidatorUsingConfiguration 
+	- LifetimeValidator : LifetimeValidator 
+	- LogTokenId : bool
+	- LogValidationExceptions : bool
+	- NameClaimType : string
+	- NameClaimTypeRetriever : System.Func<SecurityToken, string, string>
+	- PropertyBag : IDictionary<string, object>
+	- RefreshBeforeValidation : bool
+	- **RequireAudience** : bool
+	- **RequireExpirationTime** : bool
+	- **RequireSignedTokens** : bool
+	- RoleClaimType : string
+	- RoleClaimTypeRetriever : System.Func<SecurityToken, string, string>
+	- SaveSigninToken : bool
+	- SignatureValidator : SignatureValidator 
+	- SignatureValidatorUsingConfiguration : SignatureValidatorUsingConfiguration
+	- TokenDecryptionKey : SecurityKey
+	- TokenDecryptionKeyResolver : TokenDecryptionKeyResolver 
+	- TokenDecryptionKeys : IEnumerable\<SecurityKey>
+	- TokenReader : TokenReader 
+	- TokenReplayCache : ITokenReplayCache
+	- TokenReplayValidator : TokenReplayValidator 
+	- TransformBeforeSignatureValidation : TransformBeforeSignatureValidation 
+	- TryAllDecryptionKeys : bool
+	- TryAllIssuerSigningKeys : bool
+	- TryReadJwtClaim : TryReadJwtClaim 
+	- TypeValidator : TypeValidator 
+	- ValidAlgorithms : IEnumerable\<string>
+	- ValidateActor : bool
+	- ValidateAudience : bool
+	- ValidateIssuer : bool
+	- ValidateIssuerSigningKey : bool
+	- ValidateLifetime : bool
+	- ValidateSignatureLast : bool
+	- ValidateTokenReplay : bool
+	- ValidateWithLKG : bool
+	- ValidAudience : bool
+	- ValidAudiences : IEnumerable\<string>
+	- ValidIssuer : string
+	- ValidIssuers : IEnumerable\<string>
+	- ValidTypes : IEnumerable\<string>
+	- DefaultAuthenticationType : string
+	- DefaultClockSkew : System.TimeSpan
+	- DefaultMaximumTokenSizeInBytes : int
+- **TokenValidationResult**
+	- TokenValidationResult()
+	- Claims : IDictionary<string, object>
+	- ClaimsIdentity : ClaimsIdentity 
+	- Exception : System.Exception 
+	- Issuer : string
+	- IsValid : bool
+	- PropertyBag : IDictionary<string, object>
+	- SecurityToken : SecurityToken
+	- TokenContext : CallContext 
+	- TokenOnFailedValidation : SecurityToken
+	- TokenType : string
+- TransformBeforeSignatureValidation(...) : SecurityToken (delegate)
+	- SecurityToken token, 
+	- TokenValidationParameters validationParameters
+- TryReadJwtClaim(...) : bool (delegate)
+	- ref Utf8JsonReader reader, 
+	- JwtSegmentType jwtSegmentType, 
+	- string claimName, 
+	- out object claimValue
+- TypeValidator(...) : string (delegate)
+	- string type, 
+	- SecurityToken securityToken, 
+	- TokenValidationParameters validationParameters
+- UniqueId
+- Utility
+- ValidationFailure (enum)
+- Validators (static)
+- X509EncryptingCredentials : EncryptingCredentials
+- X509SecurityKey : AsymmetricSecurityKey
+- X509SigningCredentials : SigningCredentials
+
