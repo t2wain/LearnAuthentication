@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Security.WebAppLib.IdentityCore;
@@ -53,6 +54,8 @@ namespace Security.WebAppLib.Example
 
         #endregion
 
+        #region Run Tests
+
         public async Task Run(int testNo = 0)
         {
             int? o = 5;
@@ -81,14 +84,16 @@ namespace Security.WebAppLib.Example
             }
         }
 
+        #endregion
+
         #region ExploreAuthenticationSchemes
 
         /// <summary>
-        /// List all the registered authentication shemes
+        /// List all the registered authentication schemes
         /// </summary>
         public async Task ExploreAuthenticationSchemes()
         {
-            // default configured authentication shemes
+            // default configured authentication schemes
             // when adding the Identity framework
             string s = IdentityConstants.ApplicationScheme;
             s = IdentityConstants.ExternalScheme;
@@ -157,6 +162,9 @@ namespace Security.WebAppLib.Example
 
                 handler = await provider.GetHandlerAsync(
                     httpContext, IdentityConstants.TwoFactorRememberMeScheme);
+
+                handler = await provider.GetHandlerAsync(
+                    httpContext, JwtBearerDefaults.AuthenticationScheme);
             }
         }
 
@@ -178,11 +186,11 @@ namespace Security.WebAppLib.Example
 
             if (schemes is AuthenticationSchemeProvider schemeProvider)
             {
-                // handler reponsible for sign-in logic
+                // handler responsible for sign-in logic
                 AuthenticationScheme? signInScheme = 
                     await schemeProvider.GetDefaultSignInSchemeAsync();
 
-                // handler reponsible for sign-out logic
+                // handler responsible for sign-out logic
                 AuthenticationScheme? signOutScheme = 
                     await schemeProvider.GetDefaultSignOutSchemeAsync();
 
@@ -215,6 +223,39 @@ namespace Security.WebAppLib.Example
             }
 
             return defaultSchemes;
+        }
+
+        /// <summary>
+        /// Create and initialize a new authentication handler
+        /// </summary>
+        public async Task<IAuthenticationHandler?> GetAuthenticationHandler2(
+            string schemeName, HttpContext httpContext)
+        {
+            AuthenticationScheme? scheme =
+                await _authenticationSchemeProvider.GetSchemeAsync(schemeName);
+            if (scheme != null
+                && _provider.GetService(scheme.HandlerType) is IAuthenticationHandler authHandler)
+            {
+                // new handler will need to be intialized
+                await authHandler.InitializeAsync(scheme, httpContext);
+                return authHandler;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Create and initialize a new authentication handler
+        /// </summary>
+        public async Task<IAuthenticationHandler?> GetAuthenticationHandler(
+            string schemeName, HttpContext httpContext)
+        {
+            if (_authenticationService is AuthenticationService auth)
+            {
+                 IAuthenticationHandler? handler = 
+                    await auth.Handlers.GetHandlerAsync(httpContext, schemeName);
+                return handler;
+            }
+            return null;
         }
 
         #endregion
@@ -442,24 +483,57 @@ namespace Security.WebAppLib.Example
 
         public async Task ExploreJwtScheme()
         {
-            if (await GetJwtBearerHandler() is JwtBearerHandler jwtHandler)
+            if (GetHttpContext() is HttpContext httpContext)
             {
-                JwtBearerOptions options = 
-                    _provider.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().CurrentValue;
-                TokenValidationParameters validation = options.TokenValidationParameters;
+                IAuthenticationHandler? handler =
+                    await GetAuthenticationHandler(JwtBearerDefaults.AuthenticationScheme, httpContext);
+                if (handler is JwtBearerHandler jwtHandler)
+                {
+                    JwtBearerOptions options =
+                        _provider.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().CurrentValue;
+                    TokenValidationParameters validation = options.TokenValidationParameters;
+
+                    JwtConfig cfg = _provider.GetRequiredService<IOptions<JwtConfig>>().Value;
+                    ClaimsIdentity identity = CreateIdentity(cfg.AuthenticationType);
+                    string jwt = CreateJwtToken(cfg, identity);
+                    await ExploreJwtToken(cfg, jwt);
+
+                    httpContext.Request.Headers[HeaderNames.Authorization] = $"Bearer {jwt}";
+                    AuthenticateResult res = await jwtHandler.AuthenticateAsync();
+                    if (res.Succeeded)
+                    {
+                        AuthenticationTicket t = res.Ticket;
+                        ExploreAuthenticationTicket(t);
+                        ClaimsPrincipal p = t.Principal;
+                        httpContext.User = p;
+                    }
+                    else if (res.Failure is Exception e)
+                    {
+                        var msg = e.Message;
+                    }
+                }
             }
         }
 
-        public async Task<JwtBearerHandler?> GetJwtBearerHandler()
+        public string CreateJwtToken(JwtConfig cfg, ClaimsIdentity identity)
         {
-            AuthenticationScheme? scheme =
-                await _authenticationSchemeProvider.GetSchemeAsync(JwtBearerDefaults.AuthenticationScheme);
-            if (scheme != null
-                && _provider.GetService(scheme.HandlerType) is JwtBearerHandler jwtHandler)
+            SecurityTokenDescriptor d = JwtUtil.GetSecurityTokenDescriptor(cfg, identity);
+            string jwt = JwtUtil.CreateToken(d);
+            return jwt;
+        }
+
+        public async Task ExploreJwtToken(JwtConfig cfg, string token)
+        {
+            TokenValidationParameters v = JwtUtil.GetValidatOption(cfg);
+            if (await JwtUtil.ValidateTokenAsync(token, v) is TokenValidationResult res)
             {
-                return jwtHandler;
+
             }
-            return null;
+
+            if (JwtUtil.TryGetToken(token, out JsonWebToken jwtToken))
+            {
+
+            }
         }
 
         #endregion
@@ -525,7 +599,7 @@ namespace Security.WebAppLib.Example
 
             }
 
-            if (handler is SignOutAuthenticationHandler<CookieAuthenticationOptions> sigOutnHandler)
+            if (handler is SignOutAuthenticationHandler<CookieAuthenticationOptions> sigOutHandler)
             {
 
             }
